@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Plus } from "lucide-react";
+import { Plus, Pencil } from "lucide-react";
 import { getSessionContext } from "@/lib/session";
 import { getMonthSummary, getBudgetGroups } from "@/lib/queries/dashboard";
 import { PageHeader } from "@/components/app/PageHeader";
@@ -36,21 +36,24 @@ export default async function OrcamentoPage() {
       <PlanTabs active="/orcamento" />
       {familyIncomeCents > 0 && (
         <Card className="mb-4">
-          <div className="flex items-center justify-between gap-3">
-            <div>
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0">
               <p className="text-[13px] text-ink-muted">Renda familiar estimada</p>
               <h4>{formatCents(familyIncomeCents)}/mês</h4>
             </div>
-            <Link href="/configuracoes" className="text-[13px] font-semibold text-accent-ink">
-              editar
+            <Link
+              href="/configuracoes"
+              className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-divider px-3 py-1.5 text-[13px] font-semibold text-ink hover:bg-surface-2"
+            >
+              <Pencil size={13} strokeWidth={2.75} /> Editar
             </Link>
           </div>
           {incomeBreakdown.length > 1 && (
-            <div className="mt-3 flex flex-col gap-1 border-t border-divider pt-3">
+            <div className="mt-4 flex flex-col gap-1.5 border-t border-divider pt-4">
               {incomeBreakdown.map((m) => (
-                <div key={m.name} className="flex items-center justify-between text-[13px] text-ink-muted">
-                  <span>{m.name}</span>
-                  <span className="font-semibold text-ink">{formatCents(m.cents)}</span>
+                <div key={m.name} className="flex items-center justify-between gap-2 text-[13px] text-ink-muted">
+                  <span className="min-w-0 truncate">{m.name}</span>
+                  <span className="shrink-0 font-semibold text-ink">{formatCents(m.cents)}</span>
                 </div>
               ))}
             </div>

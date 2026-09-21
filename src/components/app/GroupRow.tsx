@@ -27,17 +27,21 @@ export function GroupRow({ group, withPill = true }: { group: BudgetGroupSummary
       <div className="mb-2 flex items-center gap-3">
         <Monogram label={group.name} />
         <div className="min-w-0 flex-1">
-          <p className="truncate font-semibold text-ink">{group.name}</p>
+          <div className="flex items-center justify-between gap-2">
+            <p className="min-w-0 truncate font-semibold text-ink">{group.name}</p>
+            {withPill && group.status !== "sem_limite" && (
+              <span className="shrink-0">
+                <StatusPill status={STATUS_TO_PILL[group.status]}>
+                  {groupStatusLabel(group.status, group.pct, group.kind)}
+                </StatusPill>
+              </span>
+            )}
+          </div>
           <p className="truncate text-[13px] text-ink-muted">
             {formatCents(group.spentCents)}
             {group.limitCents > 0 && ` / ${formatCents(group.limitCents)}`}
           </p>
         </div>
-        {withPill && group.status !== "sem_limite" && (
-          <StatusPill status={STATUS_TO_PILL[group.status]}>
-            {groupStatusLabel(group.status, group.pct, group.kind)}
-          </StatusPill>
-        )}
       </div>
       <ProgressBar pct={group.limitCents > 0 ? group.pct : 0} color={STATUS_TO_BAR[group.status]} />
     </Link>
