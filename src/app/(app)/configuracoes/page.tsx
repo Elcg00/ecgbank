@@ -5,12 +5,15 @@ import { signOut } from "@/app/(auth)/actions";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { centsToInputValue } from "@/lib/format";
+import { normalizePreferences } from "@/lib/preferences";
 import { NameForm } from "./NameForm";
 import { PasswordForm } from "./PasswordForm";
 import { IncomeForm } from "./IncomeForm";
+import { PreferencesForm } from "./PreferencesForm";
 
 export default async function ConfiguracoesPage() {
   const { supabase, profile, email } = await getSessionContext();
+  const prefs = normalizePreferences(profile);
   const [{ data: family }, { data: onboarding }] = await Promise.all([
     supabase.from("families").select("name").eq("id", profile.family_id).single(),
     supabase
@@ -40,6 +43,15 @@ export default async function ConfiguracoesPage() {
         <Card>
           <h5 className="mb-3">Renda</h5>
           <IncomeForm defaultIncome={centsToInputValue(onboarding?.monthly_income_cents ?? 0)} />
+        </Card>
+
+        <Card>
+          <h5 className="mb-3">Aparência</h5>
+          <PreferencesForm
+            defaultTheme={prefs.theme_preference}
+            defaultAccent={prefs.accent_theme}
+            defaultHeading={prefs.heading_style}
+          />
         </Card>
 
         <Card>

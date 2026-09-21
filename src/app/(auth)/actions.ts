@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
+import { normalizePreferences, setPreferenceCookies } from "@/lib/preferences";
 
 async function siteUrl() {
   if (process.env.NEXT_PUBLIC_SITE_URL) return process.env.NEXT_PUBLIC_SITE_URL;
@@ -16,11 +17,18 @@ export async function signIn(_prev: { error?: string } | undefined, formData: Fo
   const password = String(formData.get("password") || "");
 
   const supabase = await createClient();
-  const { error } = await supabase.auth.signInWithPassword({ email, password });
+  const { error, data } = await supabase.auth.signInWithPassword({ email, password });
 
   if (error) {
     return { error: "E-mail ou senha incorretos." };
   }
+
+  const { data: prefs } = await supabase
+    .from("profiles")
+    .select("theme_preference, accent_theme, heading_style")
+    .eq("id", data.user.id)
+    .maybeSingle();
+  if (prefs) await setPreferenceCookies(normalizePreferences(prefs));
 
   redirect("/");
 }

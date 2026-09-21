@@ -13,6 +13,9 @@ export type SessionContext = {
     full_name: string;
     role: string;
     onboarding_completed_at: string | null;
+    theme_preference: string;
+    accent_theme: string;
+    heading_style: string;
   };
 };
 
@@ -27,7 +30,7 @@ export async function getSessionContext(): Promise<SessionContext> {
 
   const { data: profile, error } = await supabase
     .from("profiles")
-    .select("id, family_id, full_name, role, onboarding_completed_at")
+    .select("id, family_id, full_name, role, onboarding_completed_at, theme_preference, accent_theme, heading_style")
     .eq("id", user.id)
     .single();
 

@@ -402,30 +402,36 @@ export type Database = {
       }
       profiles: {
         Row: {
+          accent_theme: string
           avatar_color: string
           created_at: string
           family_id: string | null
           full_name: string
+          heading_style: string
           id: string
           onboarding_completed_at: string | null
           role: string
           theme_preference: string
         }
         Insert: {
+          accent_theme?: string
           avatar_color?: string
           created_at?: string
           family_id?: string | null
           full_name?: string
+          heading_style?: string
           id: string
           onboarding_completed_at?: string | null
           role?: string
           theme_preference?: string
         }
         Update: {
+          accent_theme?: string
           avatar_color?: string
           created_at?: string
           family_id?: string | null
           full_name?: string
+          heading_style?: string
           id?: string
           onboarding_completed_at?: string | null
           role?: string

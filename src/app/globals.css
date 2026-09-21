@@ -59,8 +59,10 @@
   --shadow-lg: 0 12px 32px rgb(46 43 37 / 22%);
 }
 
+/* System-driven dark mode — skipped whenever the person picked an explicit
+   theme in Configurações (data-theme="light" or "dark" below wins instead). */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme]) {
     --color-app: #2e2b25;
     --color-surface: #474238;
     --color-surface-2: #3a352c;
@@ -79,6 +81,27 @@
     --shadow-md: 0 3px 10px rgb(0 0 0 / 32%);
     --shadow-lg: 0 12px 32px rgb(0 0 0 / 40%);
   }
+}
+
+/* Explicit "Escuro" choice — applies regardless of system preference. */
+:root[data-theme="dark"] {
+  --color-app: #2e2b25;
+  --color-surface: #474238;
+  --color-surface-2: #3a352c;
+  --color-ink: #f9f4ed;
+  --color-ink-muted: rgb(249 244 237 / 60%);
+  --color-divider: rgb(255 255 255 / 16%);
+
+  --color-positive: var(--color-accent2-400);
+  --color-negative: #e2836b;
+  --color-negative-bg: rgb(226 131 107 / 20%);
+  --color-warning: #e0b25a;
+  --color-warning-bg: rgb(224 178 90 / 20%);
+  --color-accent-ink: var(--color-accent-400);
+
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 30%);
+  --shadow-md: 0 3px 10px rgb(0 0 0 / 32%);
+  --shadow-lg: 0 12px 32px rgb(0 0 0 / 40%);
 }
 
 @theme inline {
@@ -138,6 +161,63 @@
   --shadow-sm: var(--shadow-sm);
   --shadow-md: var(--shadow-md);
   --shadow-lg: var(--shadow-lg);
+}
+
+/* Accent color presets — override the accent-100..900 scale only, since
+   every other token (accent-ink, dark-mode /40 backgrounds, etc.) already
+   references these variables and cascades through automatically. */
+:root[data-accent="azul"] {
+  --color-accent-100: #e6eef5;
+  --color-accent-200: #c3d8e8;
+  --color-accent-300: #96bcd6;
+  --color-accent-400: #6a9dc0;
+  --color-accent-500: #4a80a8;
+  --color-accent-600: #386389;
+  --color-accent-700: #2c4d6c;
+  --color-accent-800: #203a51;
+  --color-accent-900: #142534;
+}
+
+:root[data-accent="roxo"] {
+  --color-accent-100: #f0e6f2;
+  --color-accent-200: #ddc4e2;
+  --color-accent-300: #c39bcd;
+  --color-accent-400: #a473b3;
+  --color-accent-500: #875798;
+  --color-accent-600: #6b4279;
+  --color-accent-700: #52335f;
+  --color-accent-800: #3c2547;
+  --color-accent-900: #27182f;
+}
+
+:root[data-accent="terracota"] {
+  --color-accent-100: #f6e9e0;
+  --color-accent-200: #ecc9b3;
+  --color-accent-300: #dea27d;
+  --color-accent-400: #cc7c52;
+  --color-accent-500: #b65f37;
+  --color-accent-600: #954a2a;
+  --color-accent-700: #723a21;
+  --color-accent-800: #532a18;
+  --color-accent-900: #351b0f;
+}
+
+:root[data-accent="grafite"] {
+  --color-accent-100: #e9eaec;
+  --color-accent-200: #c9ccd1;
+  --color-accent-300: #a3a8b0;
+  --color-accent-400: #7c828d;
+  --color-accent-500: #61686f;
+  --color-accent-600: #4b515a;
+  --color-accent-700: #3a3f46;
+  --color-accent-800: #2b2f34;
+  --color-accent-900: #1c1e22;
+}
+
+/* Heading style — "neutro" swaps the display font for the body font,
+   reusing the already-loaded family instead of downloading a new one. */
+:root[data-heading="neutro"] {
+  --font-heading: var(--font-body);
 }
 
 html {
