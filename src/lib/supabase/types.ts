@@ -24,6 +24,7 @@ export type Database = {
           name: string
           paid: boolean
           paid_at: string | null
+          recurring: boolean
         }
         Insert: {
           amount_cents: number
@@ -34,6 +35,7 @@ export type Database = {
           name: string
           paid?: boolean
           paid_at?: string | null
+          recurring?: boolean
         }
         Update: {
           amount_cents?: number
@@ -44,6 +46,7 @@ export type Database = {
           name?: string
           paid?: boolean
           paid_at?: string | null
+          recurring?: boolean
         }
         Relationships: [
           {

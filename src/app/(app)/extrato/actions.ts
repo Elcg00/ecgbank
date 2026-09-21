@@ -1,10 +1,12 @@
 "use server";
 
-import { redirect } from "next/navigation";
 import { getSessionContext } from "@/lib/session";
 import { parseMoneyToCents } from "@/lib/format";
+import { redirectWithToast } from "@/lib/toast";
 
-export async function updateTransaction(formData: FormData) {
+type FormState = { error?: string } | undefined;
+
+export async function updateTransaction(_prev: FormState, formData: FormData): Promise<FormState> {
   const { supabase, profile } = await getSessionContext();
   const id = String(formData.get("id"));
   const type = String(formData.get("type") || "saida");
@@ -13,10 +15,10 @@ export async function updateTransaction(formData: FormData) {
   const occurredAt = String(formData.get("occurred_at") || "");
 
   if (amountCents <= 0) {
-    throw new Error("Informe um valor maior que zero.");
+    return { error: "Informe um valor maior que zero." };
   }
 
-  await supabase
+  const { error } = await supabase
     .from("transactions")
     .update({
       type,
@@ -27,7 +29,9 @@ export async function updateTransaction(formData: FormData) {
     .eq("id", id)
     .eq("family_id", profile.family_id);
 
-  redirect("/extrato");
+  if (error) return { error: "Não foi possível salvar. Tente novamente." };
+
+  redirectWithToast("/extrato", "Lançamento atualizado!");
 }
 
 export async function deleteTransaction(formData: FormData) {
@@ -36,5 +40,5 @@ export async function deleteTransaction(formData: FormData) {
 
   await supabase.from("transactions").delete().eq("id", id).eq("family_id", profile.family_id);
 
-  redirect("/extrato");
+  redirectWithToast("/extrato", "Lançamento excluído.");
 }

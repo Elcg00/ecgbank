@@ -1,10 +1,12 @@
 "use server";
 
-import { redirect } from "next/navigation";
 import { getSessionContext } from "@/lib/session";
 import { parseMoneyToCents } from "@/lib/format";
+import { redirectWithToast } from "@/lib/toast";
 
-export async function createCard(formData: FormData) {
+type FormState = { error?: string } | undefined;
+
+export async function createCard(_prev: FormState, formData: FormData): Promise<FormState> {
   const { supabase, profile } = await getSessionContext();
 
   const name = String(formData.get("name") || "Cartão").trim();
@@ -12,7 +14,7 @@ export async function createCard(formData: FormData) {
   const closingDay = Number(formData.get("closing_day") || 15);
   const dueDay = Number(formData.get("due_day") || 5);
 
-  await supabase.from("credit_cards").insert({
+  const { error } = await supabase.from("credit_cards").insert({
     family_id: profile.family_id,
     name,
     limit_cents: limitCents,
@@ -20,10 +22,12 @@ export async function createCard(formData: FormData) {
     due_day: dueDay,
   });
 
-  redirect("/cartao");
+  if (error) return { error: "Não foi possível salvar. Tente novamente." };
+
+  redirectWithToast("/cartao", "Cartão cadastrado!");
 }
 
-export async function updateCard(formData: FormData) {
+export async function updateCard(_prev: FormState, formData: FormData): Promise<FormState> {
   const { supabase, profile } = await getSessionContext();
 
   const cardId = String(formData.get("card_id"));
@@ -32,13 +36,15 @@ export async function updateCard(formData: FormData) {
   const closingDay = Number(formData.get("closing_day") || 15);
   const dueDay = Number(formData.get("due_day") || 5);
 
-  await supabase
+  const { error } = await supabase
     .from("credit_cards")
     .update({ name, limit_cents: limitCents, closing_day: closingDay, due_day: dueDay })
     .eq("id", cardId)
     .eq("family_id", profile.family_id);
 
-  redirect("/cartao");
+  if (error) return { error: "Não foi possível salvar. Tente novamente." };
+
+  redirectWithToast("/cartao", "Cartão atualizado!");
 }
 
 export async function deleteCard(formData: FormData) {
@@ -47,10 +53,10 @@ export async function deleteCard(formData: FormData) {
 
   await supabase.from("credit_cards").delete().eq("id", cardId).eq("family_id", profile.family_id);
 
-  redirect("/cartao");
+  redirectWithToast("/cartao", "Cartão excluído.");
 }
 
-export async function createPurchase(formData: FormData) {
+export async function createPurchase(_prev: FormState, formData: FormData): Promise<FormState> {
   const { supabase, profile } = await getSessionContext();
 
   const cardId = String(formData.get("card_id"));
@@ -67,10 +73,10 @@ export async function createPurchase(formData: FormData) {
     .maybeSingle();
 
   if (!name || amountCents <= 0 || !card) {
-    throw new Error("Preencha os dados da compra.");
+    return { error: "Preencha os dados da compra." };
   }
 
-  await supabase.from("credit_card_purchases").insert({
+  const { error } = await supabase.from("credit_card_purchases").insert({
     card_id: cardId,
     name,
     amount_cents: amountCents,
@@ -78,7 +84,9 @@ export async function createPurchase(formData: FormData) {
     installment_total: installmentTotal,
   });
 
-  redirect("/cartao");
+  if (error) return { error: "Não foi possível salvar. Tente novamente." };
+
+  redirectWithToast("/cartao", "Compra adicionada!");
 }
 
 export async function deletePurchase(formData: FormData) {
@@ -88,5 +96,5 @@ export async function deletePurchase(formData: FormData) {
   // RLS already scopes this to purchases on cards owned by the caller's family.
   await supabase.from("credit_card_purchases").delete().eq("id", purchaseId);
 
-  redirect("/cartao");
+  redirectWithToast("/cartao", "Compra excluída.");
 }

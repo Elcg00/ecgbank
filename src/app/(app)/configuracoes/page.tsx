@@ -4,16 +4,21 @@ import { getSessionContext } from "@/lib/session";
 import { signOut } from "@/app/(auth)/actions";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
+import { centsToInputValue } from "@/lib/format";
 import { NameForm } from "./NameForm";
 import { PasswordForm } from "./PasswordForm";
+import { IncomeForm } from "./IncomeForm";
 
 export default async function ConfiguracoesPage() {
   const { supabase, profile, email } = await getSessionContext();
-  const { data: family } = await supabase
-    .from("families")
-    .select("name")
-    .eq("id", profile.family_id)
-    .single();
+  const [{ data: family }, { data: onboarding }] = await Promise.all([
+    supabase.from("families").select("name").eq("id", profile.family_id).single(),
+    supabase
+      .from("onboarding_answers")
+      .select("monthly_income_cents")
+      .eq("user_id", profile.id)
+      .maybeSingle(),
+  ]);
 
   return (
     <div>
@@ -30,6 +35,11 @@ export default async function ConfiguracoesPage() {
         <Card>
           <h5 className="mb-3">Senha</h5>
           <PasswordForm />
+        </Card>
+
+        <Card>
+          <h5 className="mb-3">Renda</h5>
+          <IncomeForm defaultIncome={centsToInputValue(onboarding?.monthly_income_cents ?? 0)} />
         </Card>
 
         <Card>

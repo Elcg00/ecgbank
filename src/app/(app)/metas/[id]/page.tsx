@@ -4,11 +4,9 @@ import { getGoals } from "@/lib/queries/goals";
 import { BackHeader } from "@/components/app/BackHeader";
 import { Card } from "@/components/ui/Card";
 import { ProgressBar } from "@/components/ui/ProgressBar";
-import { Field } from "@/components/ui/Field";
-import { Button } from "@/components/ui/Button";
-import { ConfirmForm } from "@/components/ui/ConfirmForm";
 import { formatCents, centsToInputValue, monthsUntil } from "@/lib/format";
-import { setContribution, updateGoal, deleteGoal } from "../actions";
+import { ContributionForm } from "./ContributionForm";
+import { EditGoalForm } from "./EditGoalForm";
 
 export default async function GoalDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -49,54 +47,17 @@ export default async function GoalDetailPage({ params }: { params: Promise<{ id:
 
       <Card className="mb-4">
         <h5 className="mb-3">Quanto você já guardou</h5>
-        <form action={setContribution} className="flex flex-col gap-4">
-          <input type="hidden" name="goal_id" value={goal.id} />
-          <Field
-            label="Valor guardado por você"
-            name="amount"
-            inputMode="decimal"
-            prefix="R$"
-            defaultValue={centsToInputValue(myContribution)}
-          />
-          <Button type="submit">Salvar</Button>
-        </form>
+        <ContributionForm goalId={goal.id} defaultAmount={centsToInputValue(myContribution)} />
       </Card>
 
       <Card className="mb-4">
         <h5 className="mb-3">Editar meta</h5>
-        <form action={updateGoal} className="flex flex-col gap-4">
-          <input type="hidden" name="goal_id" value={goal.id} />
-          <Field label="Nome da meta" name="name" defaultValue={goal.name} required />
-          <Field
-            label="Valor alvo"
-            name="target"
-            inputMode="decimal"
-            prefix="R$"
-            defaultValue={centsToInputValue(goal.target_cents)}
-            required
-          />
-          <Field
-            label="Guardar por mês"
-            name="monthly_target"
-            inputMode="decimal"
-            prefix="R$"
-            defaultValue={goal.monthly_target_cents > 0 ? centsToInputValue(goal.monthly_target_cents) : ""}
-          />
-          <Field label="Prazo" name="deadline" type="date" defaultValue={goal.deadline ?? ""} />
-          <label className="flex items-center gap-2 text-[14px] font-semibold text-ink">
-            <input type="checkbox" name="shared" defaultChecked={goal.shared} className="h-4 w-4 accent-accent-700" />
-            Meta compartilhada com a família
-          </label>
-          <Button type="submit">Salvar alterações</Button>
-        </form>
+        <EditGoalForm
+          goal={goal}
+          defaultTarget={centsToInputValue(goal.target_cents)}
+          defaultMonthlyTarget={goal.monthly_target_cents > 0 ? centsToInputValue(goal.monthly_target_cents) : ""}
+        />
       </Card>
-
-      <ConfirmForm action={deleteGoal} confirmMessage={`Excluir a meta "${goal.name}"?`}>
-        <input type="hidden" name="goal_id" value={goal.id} />
-        <Button type="submit" variant="secondary" className="w-full text-negative">
-          Excluir meta
-        </Button>
-      </ConfirmForm>
     </div>
   );
 }

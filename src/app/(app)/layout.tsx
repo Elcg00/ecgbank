@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { getSessionContext } from "@/lib/session";
 import { Sidebar } from "@/components/app/Sidebar";
 import { BottomNav } from "@/components/app/BottomNav";
+import { ToastListener } from "@/components/app/ToastListener";
 
 export default async function AppLayout({ children }: { children: ReactNode }) {
   const { supabase, profile } = await getSessionContext();
@@ -19,6 +20,7 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
 
   return (
     <div className="min-h-dvh md:pl-[248px]">
+      <ToastListener />
       <Sidebar familyName={family?.name ?? "Sua família"} memberName={profile.full_name || "Você"} />
       <main className="mx-auto max-w-5xl px-5 pb-24 pt-6 md:px-10 md:pb-10 md:pt-10">
         {children}

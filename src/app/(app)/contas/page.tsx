@@ -5,7 +5,9 @@ import { BackHeader } from "@/components/app/BackHeader";
 import { PageHeader } from "@/components/app/PageHeader";
 import { Card } from "@/components/ui/Card";
 import { StatusPill, type Status } from "@/components/ui/StatusPill";
+import { Repeat } from "lucide-react";
 import { formatCents, billDueLabel } from "@/lib/format";
+import { rollRecurringBills } from "@/lib/queries/bills";
 import { markBillPaid } from "./actions";
 
 const STATUS_PILL: Record<string, Status> = { paga: "positivo", a_vencer: "atencao", atrasada: "negativo" };
@@ -13,9 +15,10 @@ const STATUS_LABEL: Record<string, string> = { paga: "Paga", a_vencer: "A vencer
 
 export default async function ContasPage() {
   const { supabase, profile } = await getSessionContext();
+  await rollRecurringBills(supabase, profile.family_id);
   const { data: bills } = await supabase
     .from("bills")
-    .select("id, name, amount_cents, due_date, paid")
+    .select("id, name, amount_cents, due_date, paid, recurring")
     .eq("family_id", profile.family_id)
     .order("due_date");
 
@@ -35,7 +38,12 @@ export default async function ContasPage() {
             <Card key={bill.id} className="flex items-center justify-between gap-3">
               <Link href={`/contas/${bill.id}`} className="flex min-w-0 flex-1 items-center gap-1">
                 <div className="min-w-0">
-                  <p className="truncate font-semibold text-ink">{bill.name}</p>
+                  <p className="flex items-center gap-1.5 truncate font-semibold text-ink">
+                    {bill.name}
+                    {bill.recurring && (
+                      <Repeat size={13} strokeWidth={2.75} className="shrink-0 text-ink-muted" aria-label="Recorrente" />
+                    )}
+                  </p>
                   <p className="truncate text-[13px] text-ink-muted">{label}</p>
                 </div>
                 <ChevronRight size={16} className="shrink-0 text-ink-muted" />

@@ -1,29 +1,35 @@
 "use server";
 
-import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { getSessionContext } from "@/lib/session";
 import { parseMoneyToCents } from "@/lib/format";
+import { redirectWithToast } from "@/lib/toast";
 
-export async function createBill(formData: FormData) {
+type FormState = { error?: string } | undefined;
+
+export async function createBill(_prev: FormState, formData: FormData): Promise<FormState> {
   const { supabase, profile } = await getSessionContext();
 
   const name = String(formData.get("name") || "").trim();
   const amountCents = parseMoneyToCents(formData.get("amount"));
   const dueDate = String(formData.get("due_date") || "");
+  const recurring = formData.get("recurring") === "on";
 
   if (!name || amountCents <= 0 || !dueDate) {
-    throw new Error("Preencha nome, valor e vencimento.");
+    return { error: "Preencha nome, valor e vencimento." };
   }
 
-  await supabase.from("bills").insert({
+  const { error } = await supabase.from("bills").insert({
     family_id: profile.family_id,
     name,
     amount_cents: amountCents,
     due_date: dueDate,
+    recurring,
   });
 
-  redirect("/contas");
+  if (error) return { error: "Não foi possível salvar. Tente novamente." };
+
+  redirectWithToast("/contas", "Conta adicionada!");
 }
 
 export async function markBillPaid(formData: FormData) {
@@ -41,24 +47,27 @@ export async function markBillPaid(formData: FormData) {
   revalidatePath("/");
 }
 
-export async function updateBill(formData: FormData) {
+export async function updateBill(_prev: FormState, formData: FormData): Promise<FormState> {
   const { supabase, profile } = await getSessionContext();
   const billId = String(formData.get("bill_id"));
   const name = String(formData.get("name") || "").trim();
   const amountCents = parseMoneyToCents(formData.get("amount"));
   const dueDate = String(formData.get("due_date") || "");
+  const recurring = formData.get("recurring") === "on";
 
   if (!name || amountCents <= 0 || !dueDate) {
-    throw new Error("Preencha nome, valor e vencimento.");
+    return { error: "Preencha nome, valor e vencimento." };
   }
 
-  await supabase
+  const { error } = await supabase
     .from("bills")
-    .update({ name, amount_cents: amountCents, due_date: dueDate })
+    .update({ name, amount_cents: amountCents, due_date: dueDate, recurring })
     .eq("id", billId)
     .eq("family_id", profile.family_id);
 
-  redirect("/contas");
+  if (error) return { error: "Não foi possível salvar. Tente novamente." };
+
+  redirectWithToast("/contas", "Conta atualizada!");
 }
 
 export async function deleteBill(formData: FormData) {
@@ -67,5 +76,5 @@ export async function deleteBill(formData: FormData) {
 
   await supabase.from("bills").delete().eq("id", billId).eq("family_id", profile.family_id);
 
-  redirect("/contas");
+  redirectWithToast("/contas", "Conta excluída.");
 }

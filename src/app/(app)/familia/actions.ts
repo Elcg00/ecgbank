@@ -1,21 +1,25 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import { getSessionContext } from "@/lib/session";
+import { redirectWithToast, redirectWithError } from "@/lib/toast";
 
 export async function inviteMember(formData: FormData) {
   const { supabase, profile } = await getSessionContext();
   const email = String(formData.get("email") || "").trim();
 
-  if (!email) return;
+  if (!email) {
+    redirectWithError("/familia", "Informe um e-mail para convidar.");
+  }
 
-  await supabase.from("family_invites").insert({
+  const { error } = await supabase.from("family_invites").insert({
     family_id: profile.family_id,
     email,
     invited_by: profile.id,
   });
 
-  revalidatePath("/familia");
+  if (error) redirectWithError("/familia", "Não foi possível enviar o convite.");
+
+  redirectWithToast("/familia", "Convite enviado!");
 }
 
 export async function revokeInvite(formData: FormData) {
@@ -28,7 +32,7 @@ export async function revokeInvite(formData: FormData) {
     .eq("id", inviteId)
     .eq("family_id", profile.family_id);
 
-  revalidatePath("/familia");
+  redirectWithToast("/familia", "Convite cancelado.");
 }
 
 export async function removeMember(formData: FormData) {
@@ -36,9 +40,9 @@ export async function removeMember(formData: FormData) {
   const memberId = String(formData.get("member_id"));
 
   const { error } = await supabase.rpc("remove_family_member", { p_member_id: memberId });
-  if (error) throw new Error(error.message);
+  if (error) redirectWithError("/familia", "Não foi possível remover esse membro.");
 
-  revalidatePath("/familia");
+  redirectWithToast("/familia", "Membro removido.");
 }
 
 export async function toggleMemberRole(formData: FormData) {
@@ -50,7 +54,7 @@ export async function toggleMemberRole(formData: FormData) {
     p_member_id: memberId,
     p_role: newRole,
   });
-  if (error) throw new Error(error.message);
+  if (error) redirectWithError("/familia", "Não foi possível alterar o papel desse membro.");
 
-  revalidatePath("/familia");
+  redirectWithToast("/familia", "Papel atualizado!");
 }

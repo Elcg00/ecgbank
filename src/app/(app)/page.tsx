@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getSessionContext } from "@/lib/session";
 import { getMonthSummary, getBudgetGroups, getLoggingStreak } from "@/lib/queries/dashboard";
 import { getGoals } from "@/lib/queries/goals";
+import { rollRecurringBills } from "@/lib/queries/bills";
 import { tipOfTheDay } from "@/lib/tips";
 import { formatCents } from "@/lib/format";
 import { PageHeader } from "@/components/app/PageHeader";
@@ -14,6 +15,7 @@ import { ArrowUp, ArrowDown } from "lucide-react";
 
 export default async function DashboardPage() {
   const { supabase, profile } = await getSessionContext();
+  await rollRecurringBills(supabase, profile.family_id);
 
   const [{ entradasCents, saidasCents, saldoCents, spentByGroup }, streak, goals, { data: bills }] =
     await Promise.all([

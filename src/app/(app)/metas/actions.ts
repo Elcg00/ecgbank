@@ -1,10 +1,12 @@
 "use server";
 
-import { redirect } from "next/navigation";
 import { getSessionContext } from "@/lib/session";
 import { parseMoneyToCents } from "@/lib/format";
+import { redirectWithToast } from "@/lib/toast";
 
-export async function createGoal(formData: FormData) {
+type FormState = { error?: string } | undefined;
+
+export async function createGoal(_prev: FormState, formData: FormData): Promise<FormState> {
   const { supabase, profile } = await getSessionContext();
 
   const name = String(formData.get("name") || "").trim();
@@ -14,10 +16,10 @@ export async function createGoal(formData: FormData) {
   const shared = formData.get("shared") === "on";
 
   if (!name || targetCents <= 0) {
-    throw new Error("Preencha o nome e um valor alvo válido.");
+    return { error: "Preencha o nome e um valor alvo válido." };
   }
 
-  await supabase.from("goals").insert({
+  const { error } = await supabase.from("goals").insert({
     family_id: profile.family_id,
     name,
     target_cents: targetCents,
@@ -26,10 +28,12 @@ export async function createGoal(formData: FormData) {
     shared,
   });
 
-  redirect("/metas");
+  if (error) return { error: "Não foi possível salvar. Tente novamente." };
+
+  redirectWithToast("/metas", "Meta criada!");
 }
 
-export async function updateGoal(formData: FormData) {
+export async function updateGoal(_prev: FormState, formData: FormData): Promise<FormState> {
   const { supabase, profile } = await getSessionContext();
 
   const goalId = String(formData.get("goal_id"));
@@ -40,16 +44,18 @@ export async function updateGoal(formData: FormData) {
   const shared = formData.get("shared") === "on";
 
   if (!name || targetCents <= 0) {
-    throw new Error("Preencha o nome e um valor alvo válido.");
+    return { error: "Preencha o nome e um valor alvo válido." };
   }
 
-  await supabase
+  const { error } = await supabase
     .from("goals")
     .update({ name, target_cents: targetCents, monthly_target_cents: monthlyTargetCents, deadline, shared })
     .eq("id", goalId)
     .eq("family_id", profile.family_id);
 
-  redirect(`/metas/${goalId}`);
+  if (error) return { error: "Não foi possível salvar. Tente novamente." };
+
+  redirectWithToast(`/metas/${goalId}`, "Meta atualizada!");
 }
 
 export async function deleteGoal(formData: FormData) {
@@ -58,10 +64,10 @@ export async function deleteGoal(formData: FormData) {
 
   await supabase.from("goals").delete().eq("id", goalId).eq("family_id", profile.family_id);
 
-  redirect("/metas");
+  redirectWithToast("/metas", "Meta excluída.");
 }
 
-export async function setContribution(formData: FormData) {
+export async function setContribution(_prev: FormState, formData: FormData): Promise<FormState> {
   const { supabase, profile } = await getSessionContext();
   const goalId = String(formData.get("goal_id"));
   const amountCents = parseMoneyToCents(formData.get("amount"));
@@ -76,5 +82,5 @@ export async function setContribution(formData: FormData) {
     { onConflict: "goal_id,user_id" },
   );
 
-  redirect(`/metas/${goalId}`);
+  redirectWithToast(`/metas/${goalId}`, "Valor guardado atualizado!");
 }

@@ -1,18 +1,20 @@
 "use server";
 
-import { redirect } from "next/navigation";
 import { getSessionContext } from "@/lib/session";
 import { parseMoneyToCents } from "@/lib/format";
+import { redirectWithToast } from "@/lib/toast";
+
+type FormState = { error?: string } | undefined;
 
 export async function setDebtStrategy(formData: FormData) {
   const { supabase, profile } = await getSessionContext();
   const strategy = String(formData.get("strategy") || "menor_primeiro");
 
   await supabase.from("families").update({ debt_strategy: strategy }).eq("id", profile.family_id);
-  redirect("/dividas");
+  redirectWithToast("/dividas", "Estratégia atualizada!");
 }
 
-export async function createDebt(formData: FormData) {
+export async function createDebt(_prev: FormState, formData: FormData): Promise<FormState> {
   const { supabase, profile } = await getSessionContext();
 
   const name = String(formData.get("name") || "").trim();
@@ -22,10 +24,10 @@ export async function createDebt(formData: FormData) {
   const installmentAmountCents = parseMoneyToCents(formData.get("installment_amount"));
 
   if (!name || remainingCents <= 0) {
-    throw new Error("Preencha o nome e o valor restante da dívida.");
+    return { error: "Preencha o nome e um valor restante válido." };
   }
 
-  await supabase.from("debts").insert({
+  const { error } = await supabase.from("debts").insert({
     family_id: profile.family_id,
     name,
     original_amount_cents: remainingCents,
@@ -35,10 +37,12 @@ export async function createDebt(formData: FormData) {
     installment_amount_cents: installmentAmountCents,
   });
 
-  redirect("/dividas");
+  if (error) return { error: "Não foi possível salvar. Tente novamente." };
+
+  redirectWithToast("/dividas", "Dívida adicionada!");
 }
 
-export async function updateDebt(formData: FormData) {
+export async function updateDebt(_prev: FormState, formData: FormData): Promise<FormState> {
   const { supabase, profile } = await getSessionContext();
 
   const debtId = String(formData.get("debt_id"));
@@ -49,10 +53,10 @@ export async function updateDebt(formData: FormData) {
   const installmentAmountCents = parseMoneyToCents(formData.get("installment_amount"));
 
   if (!name || remainingCents < 0) {
-    throw new Error("Preencha o nome e o valor restante da dívida.");
+    return { error: "Preencha o nome e um valor restante válido." };
   }
 
-  await supabase
+  const { error } = await supabase
     .from("debts")
     .update({
       name,
@@ -64,7 +68,9 @@ export async function updateDebt(formData: FormData) {
     .eq("id", debtId)
     .eq("family_id", profile.family_id);
 
-  redirect("/dividas");
+  if (error) return { error: "Não foi possível salvar. Tente novamente." };
+
+  redirectWithToast("/dividas", "Dívida atualizada!");
 }
 
 export async function deleteDebt(formData: FormData) {
@@ -73,7 +79,7 @@ export async function deleteDebt(formData: FormData) {
 
   await supabase.from("debts").delete().eq("id", debtId).eq("family_id", profile.family_id);
 
-  redirect("/dividas");
+  redirectWithToast("/dividas", "Dívida excluída.");
 }
 
 export async function registerDebtPayment(formData: FormData) {
@@ -88,12 +94,12 @@ export async function registerDebtPayment(formData: FormData) {
     .eq("family_id", profile.family_id)
     .single();
 
-  if (debt) {
+  if (debt && paymentCents > 0) {
     await supabase
       .from("debts")
       .update({ remaining_cents: Math.max(0, debt.remaining_cents - paymentCents) })
       .eq("id", debtId);
   }
 
-  redirect("/dividas");
+  redirectWithToast("/dividas", "Pagamento registrado!");
 }

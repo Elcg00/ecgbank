@@ -4,11 +4,8 @@ import { getMonthSummary, getBudgetGroups, groupStatusLabel } from "@/lib/querie
 import { BackHeader } from "@/components/app/BackHeader";
 import { Card } from "@/components/ui/Card";
 import { ProgressBar } from "@/components/ui/ProgressBar";
-import { Field } from "@/components/ui/Field";
-import { Button } from "@/components/ui/Button";
-import { ConfirmForm } from "@/components/ui/ConfirmForm";
 import { formatCents, centsToInputValue } from "@/lib/format";
-import { updateGroup, deleteGroup } from "../actions";
+import { EditGroupForm } from "./EditGroupForm";
 
 export default async function BudgetGroupPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -35,31 +32,14 @@ export default async function BudgetGroupPage({ params }: { params: Promise<{ id
           </p>
         )}
       </Card>
-      <Card className="mb-4">
+      <Card>
         <h5 className="mb-3">Editar grupo</h5>
-        <form action={updateGroup} className="flex flex-col gap-4">
-          <input type="hidden" name="group_id" value={group.id} />
-          <Field label="Nome" name="name" defaultValue={group.name} required />
-          <Field
-            label="Limite mensal"
-            name="limit"
-            inputMode="decimal"
-            prefix="R$"
-            defaultValue={group.limitCents > 0 ? centsToInputValue(group.limitCents) : ""}
-            placeholder="0"
-          />
-          <Button type="submit">Salvar alterações</Button>
-        </form>
+        <EditGroupForm
+          groupId={group.id}
+          name={group.name}
+          defaultLimit={group.limitCents > 0 ? centsToInputValue(group.limitCents) : ""}
+        />
       </Card>
-      <ConfirmForm
-        action={deleteGroup}
-        confirmMessage={`Excluir o grupo "${group.name}"? Os lançamentos já feitos continuam no extrato, só perdem a categoria.`}
-      >
-        <input type="hidden" name="group_id" value={group.id} />
-        <Button type="submit" variant="secondary" className="w-full text-negative">
-          Excluir grupo
-        </Button>
-      </ConfirmForm>
     </div>
   );
 }

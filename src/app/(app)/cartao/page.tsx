@@ -5,11 +5,11 @@ import { PageHeader } from "@/components/app/PageHeader";
 import { getSessionContext } from "@/lib/session";
 import { Card } from "@/components/ui/Card";
 import { ProgressBar } from "@/components/ui/ProgressBar";
-import { Field } from "@/components/ui/Field";
 import { Button } from "@/components/ui/Button";
 import { ConfirmForm } from "@/components/ui/ConfirmForm";
 import { formatCents, nextDayOfMonthLabel } from "@/lib/format";
-import { createPurchase, deletePurchase } from "./actions";
+import { deletePurchase } from "./actions";
+import { PurchaseForm } from "./PurchaseForm";
 
 export default async function CartaoPage() {
   const { supabase, profile } = await getSessionContext();
@@ -106,16 +106,7 @@ export default async function CartaoPage() {
 
               <Card className="mt-4">
                 <h5 className="mb-3">Nova compra parcelada</h5>
-                <form action={createPurchase} className="grid gap-4 sm:grid-cols-2">
-                  <input type="hidden" name="card_id" value={card.id} />
-                  <Field label="Nome da compra" name="name" required placeholder="Notebook" />
-                  <Field label="Valor da parcela" name="amount" inputMode="decimal" prefix="R$" required placeholder="210" />
-                  <Field label="Parcela atual" name="installment_current" inputMode="numeric" placeholder="4" defaultValue="1" />
-                  <Field label="Total de parcelas" name="installment_total" inputMode="numeric" placeholder="10" defaultValue="1" />
-                  <Button type="submit" className="sm:col-span-2">
-                    Adicionar compra
-                  </Button>
-                </form>
+                <PurchaseForm cardId={card.id} />
               </Card>
             </div>
           );

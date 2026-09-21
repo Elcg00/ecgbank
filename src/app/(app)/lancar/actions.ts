@@ -1,7 +1,7 @@
 "use server";
 
-import { redirect } from "next/navigation";
 import { getSessionContext } from "@/lib/session";
+import { redirectWithToast } from "@/lib/toast";
 
 export async function createTransaction(formData: FormData) {
   const { supabase, profile } = await getSessionContext();
@@ -29,5 +29,5 @@ export async function createTransaction(formData: FormData) {
     recurring,
   });
 
-  redirect("/");
+  redirectWithToast("/", "Lançamento salvo!");
 }
