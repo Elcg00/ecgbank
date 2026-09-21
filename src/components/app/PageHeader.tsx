@@ -11,7 +11,7 @@ export function PageHeader({ title, name }: { title: string; name: string }) {
         </p>
         <h1>{title}</h1>
       </div>
-      <Link href="/familia" className="md:hidden" aria-label="Família">
+      <Link href="/configuracoes" className="md:hidden" aria-label="Configurações">
         <Monogram label={name} size="lg" />
       </Link>
     </div>

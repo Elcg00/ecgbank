@@ -5,7 +5,8 @@ import { Card } from "@/components/ui/Card";
 import { Monogram } from "@/components/ui/Monogram";
 import { Field } from "@/components/ui/Field";
 import { Button } from "@/components/ui/Button";
-import { inviteMember, revokeInvite } from "./actions";
+import { ConfirmForm } from "@/components/ui/ConfirmForm";
+import { inviteMember, revokeInvite, removeMember, toggleMemberRole } from "./actions";
 
 export default async function FamiliaPage() {
   const { supabase, profile } = await getSessionContext();
@@ -23,6 +24,8 @@ export default async function FamiliaPage() {
       .eq("status", "pending"),
   ]);
 
+  const isAdmin = profile.role === "admin";
+
   return (
     <div>
       <BackHeader href="/mais" label="Mais" />
@@ -30,17 +33,42 @@ export default async function FamiliaPage() {
       <h6 className="mb-3 text-ink-muted">Família / Compartilhamento</h6>
 
       <div className="mb-4 flex flex-col gap-3 md:grid md:grid-cols-2">
-        {(members ?? []).map((m) => (
-          <Card key={m.id} className="flex items-center gap-3">
-            <Monogram label={m.full_name || "Membro"} size="lg" />
-            <div>
-              <p className="font-semibold text-ink">{m.full_name || "Sem nome"}</p>
-              <p className="text-[13px] text-ink-muted">
-                {m.role === "admin" ? "Administrador(a) — edita tudo" : "Pode lançar e ver tudo"}
-              </p>
-            </div>
-          </Card>
-        ))}
+        {(members ?? []).map((m) => {
+          const isSelf = m.id === profile.id;
+          return (
+            <Card key={m.id} className="flex items-center gap-3">
+              <Monogram label={m.full_name || "Membro"} size="lg" />
+              <div className="min-w-0 flex-1">
+                <p className="truncate font-semibold text-ink">
+                  {m.full_name || "Sem nome"} {isSelf && <span className="text-ink-muted">(você)</span>}
+                </p>
+                <p className="text-[13px] text-ink-muted">
+                  {m.role === "admin" ? "Administrador(a) — edita tudo" : "Pode lançar e ver tudo"}
+                </p>
+              </div>
+              {isAdmin && !isSelf && (
+                <div className="flex shrink-0 flex-col items-end gap-1.5">
+                  <form action={toggleMemberRole}>
+                    <input type="hidden" name="member_id" value={m.id} />
+                    <input type="hidden" name="new_role" value={m.role === "admin" ? "member" : "admin"} />
+                    <button type="submit" className="text-[12px] font-semibold text-accent-ink">
+                      {m.role === "admin" ? "Tornar membro" : "Tornar admin"}
+                    </button>
+                  </form>
+                  <ConfirmForm
+                    action={removeMember}
+                    confirmMessage={`Remover ${m.full_name || "esse membro"} da família?`}
+                  >
+                    <input type="hidden" name="member_id" value={m.id} />
+                    <button type="submit" className="text-[12px] font-semibold text-negative">
+                      Remover
+                    </button>
+                  </ConfirmForm>
+                </div>
+              )}
+            </Card>
+          );
+        })}
       </div>
 
       {(invites ?? []).map((invite) => (

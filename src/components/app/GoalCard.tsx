@@ -11,7 +11,7 @@ export type GoalSummary = {
   shared: boolean;
   monthly_target_cents: number;
   savedCents: number;
-  contributions: { name: string; amountCents: number }[];
+  contributions: { userId: string; name: string; amountCents: number }[];
 };
 
 export function GoalCard({ goal, compact = false }: { goal: GoalSummary; compact?: boolean }) {
@@ -38,7 +38,7 @@ export function GoalCard({ goal, compact = false }: { goal: GoalSummary; compact
           <div className="flex flex-wrap gap-2">
             {goal.contributions.map((c) => (
               <span
-                key={c.name}
+                key={c.userId}
                 className="rounded-full bg-surface-2 px-3 py-1 text-[12px] font-semibold text-ink-muted"
               >
                 {c.name}: {formatCents(c.amountCents)}

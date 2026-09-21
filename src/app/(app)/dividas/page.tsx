@@ -61,18 +61,18 @@ export default async function DividasPage() {
       <div className="flex flex-col gap-3 md:grid md:grid-cols-2 md:gap-4">
         {debts.map((d) => (
           <Card key={d.id} className="flex flex-col gap-3">
-            <div>
+            <Link href={`/dividas/${d.id}`}>
               <h4>{d.name}</h4>
               <p className="text-[13px] text-ink-muted">
                 {formatCents(d.remainingCents)} restante · {d.interestRateMonthly}% a.m. · {d.installmentCount}x{" "}
                 {formatCents(d.installmentAmountCents)}
               </p>
-            </div>
+            </Link>
             <ProgressBar pct={d.paidPct} color="positive" />
             <p className="text-[13px] font-semibold text-positive">{d.paidPct}% pago</p>
             <form action={registerDebtPayment} className="flex items-end gap-2">
               <input type="hidden" name="debt_id" value={d.id} />
-              <Field label="Registrar pagamento" name="amount" inputMode="numeric" prefix="R$" placeholder="100" />
+              <Field label="Registrar pagamento" name="amount" inputMode="decimal" prefix="R$" placeholder="100" />
               <Button type="submit" variant="secondary">
                 OK
               </Button>

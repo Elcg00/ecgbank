@@ -9,6 +9,7 @@ import {
   Users,
   MoreHorizontal,
   Plus,
+  Settings,
   type LucideIcon,
 } from "lucide-react";
 
@@ -41,6 +42,7 @@ export const maisMenu: NavItem[] = [
   { href: "/contas", label: "Contas a pagar", icon: CalendarClock },
   { href: "/cartao", label: "Cartão de crédito", icon: CreditCard },
   { href: "/familia", label: "Família", icon: Users },
+  { href: "/configuracoes", label: "Configurações", icon: Settings },
 ];
 
 export const planTabs = [

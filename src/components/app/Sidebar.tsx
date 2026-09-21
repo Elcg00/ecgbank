@@ -26,13 +26,16 @@ export function Sidebar({ familyName, memberName }: { familyName: string; member
           />
         ))}
       </nav>
-      <div className="flex items-center gap-3 rounded-2xl bg-surface-2 px-3 py-3">
+      <Link
+        href="/configuracoes"
+        className="flex items-center gap-3 rounded-2xl bg-surface-2 px-3 py-3 hover:bg-divider/40"
+      >
         <Monogram label={memberName} />
         <div className="min-w-0">
           <p className="truncate text-[14px] font-semibold text-ink">{memberName}</p>
           <p className="truncate text-[12px] text-ink-muted">{familyName}</p>
         </div>
-      </div>
+      </Link>
     </aside>
   );
 }

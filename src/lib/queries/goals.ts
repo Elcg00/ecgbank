@@ -13,7 +13,7 @@ export async function getGoals(supabase: SupabaseClient, familyId: string): Prom
 
   const { data: contributions } = await supabase
     .from("goal_contributions")
-    .select("goal_id, amount_cents, profiles(full_name)")
+    .select("goal_id, user_id, amount_cents, profiles(full_name)")
     .in(
       "goal_id",
       goals.map((g) => g.id),
@@ -26,6 +26,7 @@ export async function getGoals(supabase: SupabaseClient, familyId: string): Prom
       ...g,
       savedCents,
       contributions: rows.map((c) => ({
+        userId: c.user_id,
         name: (c.profiles as unknown as { full_name: string } | null)?.full_name || "Membro",
         amountCents: c.amount_cents,
       })),

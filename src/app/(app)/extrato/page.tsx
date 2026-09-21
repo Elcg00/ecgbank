@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { getSessionContext } from "@/lib/session";
 import { PageHeader } from "@/components/app/PageHeader";
 import { Card } from "@/components/ui/Card";
@@ -41,7 +42,11 @@ export default async function ExtratoPage() {
             const member = (t.profiles as unknown as { full_name: string } | null)?.full_name;
             const sub = [group, PAYMENT_LABEL[t.payment_method ?? ""], member].filter(Boolean).join(" · ");
             return (
-              <div key={t.id} className="flex items-center justify-between gap-3 py-3">
+              <Link
+                key={t.id}
+                href={`/extrato/${t.id}`}
+                className="flex items-center justify-between gap-3 py-3"
+              >
                 <div className="min-w-0">
                   <p className="truncate font-semibold text-ink">{group ?? "Sem categoria"}</p>
                   <p className="truncate text-[13px] text-ink-muted">{sub || "—"}</p>
@@ -53,7 +58,7 @@ export default async function ExtratoPage() {
                   </span>
                   <span className="text-[12px] text-ink-muted">{formatDate(t.occurred_at)}</span>
                 </div>
-              </div>
+              </Link>
             );
           })}
           {rows.length === 0 && (

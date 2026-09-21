@@ -6,8 +6,9 @@ import { Card } from "@/components/ui/Card";
 import { ProgressBar } from "@/components/ui/ProgressBar";
 import { Field } from "@/components/ui/Field";
 import { Button } from "@/components/ui/Button";
-import { formatCents } from "@/lib/format";
-import { updateGroupLimit } from "../actions";
+import { ConfirmForm } from "@/components/ui/ConfirmForm";
+import { formatCents, centsToInputValue } from "@/lib/format";
+import { updateGroup, deleteGroup } from "../actions";
 
 export default async function BudgetGroupPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -34,21 +35,31 @@ export default async function BudgetGroupPage({ params }: { params: Promise<{ id
           </p>
         )}
       </Card>
-      <Card>
-        <h5 className="mb-3">Limite mensal</h5>
-        <form action={updateGroupLimit} className="flex flex-col gap-4">
+      <Card className="mb-4">
+        <h5 className="mb-3">Editar grupo</h5>
+        <form action={updateGroup} className="flex flex-col gap-4">
           <input type="hidden" name="group_id" value={group.id} />
+          <Field label="Nome" name="name" defaultValue={group.name} required />
           <Field
-            label="Novo limite"
+            label="Limite mensal"
             name="limit"
-            inputMode="numeric"
+            inputMode="decimal"
             prefix="R$"
-            defaultValue={group.limitCents > 0 ? String(group.limitCents / 100) : ""}
+            defaultValue={group.limitCents > 0 ? centsToInputValue(group.limitCents) : ""}
             placeholder="0"
           />
-          <Button type="submit">Salvar limite</Button>
+          <Button type="submit">Salvar alterações</Button>
         </form>
       </Card>
+      <ConfirmForm
+        action={deleteGroup}
+        confirmMessage={`Excluir o grupo "${group.name}"? Os lançamentos já feitos continuam no extrato, só perdem a categoria.`}
+      >
+        <input type="hidden" name="group_id" value={group.id} />
+        <Button type="submit" variant="secondary" className="w-full text-negative">
+          Excluir grupo
+        </Button>
+      </ConfirmForm>
     </div>
   );
 }

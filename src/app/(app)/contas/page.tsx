@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Plus } from "lucide-react";
+import { Plus, ChevronRight } from "lucide-react";
 import { getSessionContext } from "@/lib/session";
 import { BackHeader } from "@/components/app/BackHeader";
 import { PageHeader } from "@/components/app/PageHeader";
@@ -33,10 +33,13 @@ export default async function ContasPage() {
           const { label, status } = billDueLabel(bill.due_date, bill.paid);
           return (
             <Card key={bill.id} className="flex items-center justify-between gap-3">
-              <div className="min-w-0">
-                <p className="truncate font-semibold text-ink">{bill.name}</p>
-                <p className="truncate text-[13px] text-ink-muted">{label}</p>
-              </div>
+              <Link href={`/contas/${bill.id}`} className="flex min-w-0 flex-1 items-center gap-1">
+                <div className="min-w-0">
+                  <p className="truncate font-semibold text-ink">{bill.name}</p>
+                  <p className="truncate text-[13px] text-ink-muted">{label}</p>
+                </div>
+                <ChevronRight size={16} className="shrink-0 text-ink-muted" />
+              </Link>
               <div className="flex shrink-0 flex-col items-end gap-1.5">
                 <span className="font-semibold text-ink">{formatCents(bill.amount_cents)}</span>
                 <form action={markBillPaid}>

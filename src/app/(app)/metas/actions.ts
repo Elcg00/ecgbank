@@ -2,17 +2,14 @@
 
 import { redirect } from "next/navigation";
 import { getSessionContext } from "@/lib/session";
-
-function toCents(value: FormDataEntryValue | null) {
-  return Number(String(value || "0").replace(/\D/g, "")) * 100;
-}
+import { parseMoneyToCents } from "@/lib/format";
 
 export async function createGoal(formData: FormData) {
   const { supabase, profile } = await getSessionContext();
 
   const name = String(formData.get("name") || "").trim();
-  const targetCents = toCents(formData.get("target"));
-  const monthlyTargetCents = toCents(formData.get("monthly_target"));
+  const targetCents = parseMoneyToCents(formData.get("target"));
+  const monthlyTargetCents = parseMoneyToCents(formData.get("monthly_target"));
   const deadline = String(formData.get("deadline") || "") || null;
   const shared = formData.get("shared") === "on";
 
@@ -32,25 +29,48 @@ export async function createGoal(formData: FormData) {
   redirect("/metas");
 }
 
-export async function addContribution(formData: FormData) {
+export async function updateGoal(formData: FormData) {
+  const { supabase, profile } = await getSessionContext();
+
+  const goalId = String(formData.get("goal_id"));
+  const name = String(formData.get("name") || "").trim();
+  const targetCents = parseMoneyToCents(formData.get("target"));
+  const monthlyTargetCents = parseMoneyToCents(formData.get("monthly_target"));
+  const deadline = String(formData.get("deadline") || "") || null;
+  const shared = formData.get("shared") === "on";
+
+  if (!name || targetCents <= 0) {
+    throw new Error("Preencha o nome e um valor alvo válido.");
+  }
+
+  await supabase
+    .from("goals")
+    .update({ name, target_cents: targetCents, monthly_target_cents: monthlyTargetCents, deadline, shared })
+    .eq("id", goalId)
+    .eq("family_id", profile.family_id);
+
+  redirect(`/metas/${goalId}`);
+}
+
+export async function deleteGoal(formData: FormData) {
   const { supabase, profile } = await getSessionContext();
   const goalId = String(formData.get("goal_id"));
-  const addCents = toCents(formData.get("amount"));
 
-  if (addCents <= 0) return;
+  await supabase.from("goals").delete().eq("id", goalId).eq("family_id", profile.family_id);
 
-  const { data: existing } = await supabase
-    .from("goal_contributions")
-    .select("amount_cents")
-    .eq("goal_id", goalId)
-    .eq("user_id", profile.id)
-    .maybeSingle();
+  redirect("/metas");
+}
+
+export async function setContribution(formData: FormData) {
+  const { supabase, profile } = await getSessionContext();
+  const goalId = String(formData.get("goal_id"));
+  const amountCents = parseMoneyToCents(formData.get("amount"));
 
   await supabase.from("goal_contributions").upsert(
     {
       goal_id: goalId,
       user_id: profile.id,
-      amount_cents: (existing?.amount_cents ?? 0) + addCents,
+      amount_cents: Math.max(0, amountCents),
       updated_at: new Date().toISOString(),
     },
     { onConflict: "goal_id,user_id" },

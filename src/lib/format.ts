@@ -53,6 +53,19 @@ export function nextDayOfMonthLabel(day: number): string {
   return d.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" });
 }
 
+/** Parses "1.200", "1200" or "12,34" into integer cents. */
+export function parseMoneyToCents(raw: FormDataEntryValue | null): number {
+  const cleaned = String(raw ?? "").trim();
+  if (!cleaned) return 0;
+  const normalized = cleaned.replace(/\./g, "").replace(",", ".");
+  const value = Number.parseFloat(normalized);
+  return Number.isFinite(value) ? Math.round(value * 100) : 0;
+}
+
+export function centsToInputValue(cents: number): string {
+  return (cents / 100).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
 export function monogram(name: string): string {
   return name.trim().charAt(0).toUpperCase() || "?";
 }

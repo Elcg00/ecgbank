@@ -2,16 +2,13 @@
 
 import { redirect } from "next/navigation";
 import { getSessionContext } from "@/lib/session";
-
-function toCents(value: FormDataEntryValue | null) {
-  return Number(String(value || "0").replace(/\D/g, "")) * 100;
-}
+import { parseMoneyToCents } from "@/lib/format";
 
 export async function createCard(formData: FormData) {
   const { supabase, profile } = await getSessionContext();
 
   const name = String(formData.get("name") || "Cartão").trim();
-  const limitCents = toCents(formData.get("limit"));
+  const limitCents = parseMoneyToCents(formData.get("limit"));
   const closingDay = Number(formData.get("closing_day") || 15);
   const dueDay = Number(formData.get("due_day") || 5);
 
@@ -26,12 +23,39 @@ export async function createCard(formData: FormData) {
   redirect("/cartao");
 }
 
+export async function updateCard(formData: FormData) {
+  const { supabase, profile } = await getSessionContext();
+
+  const cardId = String(formData.get("card_id"));
+  const name = String(formData.get("name") || "Cartão").trim();
+  const limitCents = parseMoneyToCents(formData.get("limit"));
+  const closingDay = Number(formData.get("closing_day") || 15);
+  const dueDay = Number(formData.get("due_day") || 5);
+
+  await supabase
+    .from("credit_cards")
+    .update({ name, limit_cents: limitCents, closing_day: closingDay, due_day: dueDay })
+    .eq("id", cardId)
+    .eq("family_id", profile.family_id);
+
+  redirect("/cartao");
+}
+
+export async function deleteCard(formData: FormData) {
+  const { supabase, profile } = await getSessionContext();
+  const cardId = String(formData.get("card_id"));
+
+  await supabase.from("credit_cards").delete().eq("id", cardId).eq("family_id", profile.family_id);
+
+  redirect("/cartao");
+}
+
 export async function createPurchase(formData: FormData) {
   const { supabase, profile } = await getSessionContext();
 
   const cardId = String(formData.get("card_id"));
   const name = String(formData.get("name") || "").trim();
-  const amountCents = toCents(formData.get("amount"));
+  const amountCents = parseMoneyToCents(formData.get("amount"));
   const installmentCurrent = Number(formData.get("installment_current") || 1);
   const installmentTotal = Number(formData.get("installment_total") || 1);
 
@@ -53,6 +77,16 @@ export async function createPurchase(formData: FormData) {
     installment_current: installmentCurrent,
     installment_total: installmentTotal,
   });
+
+  redirect("/cartao");
+}
+
+export async function deletePurchase(formData: FormData) {
+  const { supabase } = await getSessionContext();
+  const purchaseId = String(formData.get("purchase_id"));
+
+  // RLS already scopes this to purchases on cards owned by the caller's family.
+  await supabase.from("credit_card_purchases").delete().eq("id", purchaseId);
 
   redirect("/cartao");
 }

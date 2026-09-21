@@ -10,7 +10,7 @@ export default function NovaContaPage() {
       <h1 className="mb-5">Nova conta</h1>
       <form action={createBill} className="flex flex-col gap-4">
         <Field label="Nome da conta" name="name" required placeholder="Aluguel" />
-        <Field label="Valor" name="amount" inputMode="numeric" prefix="R$" required placeholder="1.200" />
+        <Field label="Valor" name="amount" inputMode="decimal" prefix="R$" required placeholder="1.200" />
         <Field label="Vencimento" name="due_date" type="date" required />
         <Button type="submit">Adicionar conta</Button>
       </form>

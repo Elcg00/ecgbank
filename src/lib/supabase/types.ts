@@ -509,6 +509,14 @@ export type Database = {
     Functions: {
       current_family_id: { Args: never; Returns: string }
       provision_family: { Args: { p_name: string }; Returns: string }
+      remove_family_member: {
+        Args: { p_member_id: string }
+        Returns: undefined
+      }
+      set_family_member_role: {
+        Args: { p_member_id: string; p_role: string }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never

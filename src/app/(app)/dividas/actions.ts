@@ -2,10 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { getSessionContext } from "@/lib/session";
-
-function toCents(value: FormDataEntryValue | null) {
-  return Number(String(value || "0").replace(/\D/g, "")) * 100;
-}
+import { parseMoneyToCents } from "@/lib/format";
 
 export async function setDebtStrategy(formData: FormData) {
   const { supabase, profile } = await getSessionContext();
@@ -19,10 +16,10 @@ export async function createDebt(formData: FormData) {
   const { supabase, profile } = await getSessionContext();
 
   const name = String(formData.get("name") || "").trim();
-  const remainingCents = toCents(formData.get("remaining"));
+  const remainingCents = parseMoneyToCents(formData.get("remaining"));
   const interestRate = Number(String(formData.get("interest_rate") || "0").replace(",", "."));
   const installmentCount = Number(formData.get("installment_count") || 1);
-  const installmentAmountCents = toCents(formData.get("installment_amount"));
+  const installmentAmountCents = parseMoneyToCents(formData.get("installment_amount"));
 
   if (!name || remainingCents <= 0) {
     throw new Error("Preencha o nome e o valor restante da dívida.");
@@ -41,10 +38,48 @@ export async function createDebt(formData: FormData) {
   redirect("/dividas");
 }
 
+export async function updateDebt(formData: FormData) {
+  const { supabase, profile } = await getSessionContext();
+
+  const debtId = String(formData.get("debt_id"));
+  const name = String(formData.get("name") || "").trim();
+  const remainingCents = parseMoneyToCents(formData.get("remaining"));
+  const interestRate = Number(String(formData.get("interest_rate") || "0").replace(",", "."));
+  const installmentCount = Number(formData.get("installment_count") || 1);
+  const installmentAmountCents = parseMoneyToCents(formData.get("installment_amount"));
+
+  if (!name || remainingCents < 0) {
+    throw new Error("Preencha o nome e o valor restante da dívida.");
+  }
+
+  await supabase
+    .from("debts")
+    .update({
+      name,
+      remaining_cents: remainingCents,
+      interest_rate_monthly: interestRate,
+      installment_count: installmentCount,
+      installment_amount_cents: installmentAmountCents,
+    })
+    .eq("id", debtId)
+    .eq("family_id", profile.family_id);
+
+  redirect("/dividas");
+}
+
+export async function deleteDebt(formData: FormData) {
+  const { supabase, profile } = await getSessionContext();
+  const debtId = String(formData.get("debt_id"));
+
+  await supabase.from("debts").delete().eq("id", debtId).eq("family_id", profile.family_id);
+
+  redirect("/dividas");
+}
+
 export async function registerDebtPayment(formData: FormData) {
   const { supabase, profile } = await getSessionContext();
   const debtId = String(formData.get("debt_id"));
-  const paymentCents = toCents(formData.get("amount"));
+  const paymentCents = parseMoneyToCents(formData.get("amount"));
 
   const { data: debt } = await supabase
     .from("debts")
