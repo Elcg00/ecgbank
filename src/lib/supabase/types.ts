@@ -508,6 +508,7 @@ export type Database = {
     }
     Functions: {
       current_family_id: { Args: never; Returns: string }
+      provision_family: { Args: { p_name: string }; Returns: string }
     }
     Enums: {
       [_ in never]: never

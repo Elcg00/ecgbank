@@ -43,20 +43,18 @@ export async function ensureFamily(
     }
   }
 
-  const { data: family, error } = await supabase
-    .from("families")
-    .insert({ name: `Família de ${profile.full_name || "vocês"}` })
-    .select("id")
-    .single();
+  // Runs as a single SECURITY DEFINER transaction (creates the family and
+  // links this profile to it) so it isn't tripped up by RLS: right after the
+  // INSERT, current_family_id() still resolves to null for this user until
+  // the profile is linked, which made a plain insert().select() come back
+  // empty (Postgres also applies the SELECT policy to RETURNING rows).
+  const { data: familyId, error } = await supabase.rpc("provision_family", {
+    p_name: `Família de ${profile.full_name || "vocês"}`,
+  });
 
-  if (error || !family) {
+  if (error || !familyId) {
     throw new Error("Não foi possível preparar sua família.");
   }
 
-  await supabase
-    .from("profiles")
-    .update({ family_id: family.id, role: "admin" })
-    .eq("id", profile.id);
-
-  return family.id as string;
+  return familyId as string;
 }
