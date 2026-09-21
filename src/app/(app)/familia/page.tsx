@@ -14,7 +14,7 @@ export default async function FamiliaPage() {
   const [{ data: members }, { data: invites }] = await Promise.all([
     supabase
       .from("profiles")
-      .select("id, full_name, role")
+      .select("id, full_name, role, avatar_color")
       .eq("family_id", profile.family_id)
       .order("created_at"),
     supabase
@@ -29,7 +29,7 @@ export default async function FamiliaPage() {
   return (
     <div>
       <BackHeader href="/mais" label="Mais" />
-      <PageHeader title="Família" name={profile.full_name} />
+      <PageHeader title="Família" name={profile.full_name} avatarColor={profile.avatar_color} />
       <h6 className="mb-3 text-ink-muted">Família / Compartilhamento</h6>
 
       <div className="mb-4 flex flex-col gap-3 md:grid md:grid-cols-2">
@@ -37,7 +37,7 @@ export default async function FamiliaPage() {
           const isSelf = m.id === profile.id;
           return (
             <Card key={m.id} className="flex items-center gap-3">
-              <Monogram label={m.full_name || "Membro"} size="lg" />
+              <Monogram label={m.full_name || "Membro"} size="lg" color={m.avatar_color} />
               <div className="min-w-0 flex-1">
                 <p className="truncate font-semibold text-ink">
                   {m.full_name || "Sem nome"} {isSelf && <span className="text-ink-muted">(você)</span>}

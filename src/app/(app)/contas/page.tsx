@@ -25,7 +25,7 @@ export default async function ContasPage() {
   return (
     <div>
       <BackHeader href="/mais" label="Mais" />
-      <PageHeader title="Contas a pagar" name={profile.full_name} />
+      <PageHeader title="Contas a pagar" name={profile.full_name} avatarColor={profile.avatar_color} />
       <div className="mb-4 flex justify-end">
         <Link href="/contas/nova" className="inline-flex items-center gap-1 text-[14px] font-semibold text-accent-ink">
           <Plus size={16} strokeWidth={2.75} /> Nova conta

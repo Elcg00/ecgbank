@@ -21,7 +21,11 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-dvh md:pl-[248px]">
       <ToastListener />
-      <Sidebar familyName={family?.name ?? "Sua família"} memberName={profile.full_name || "Você"} />
+      <Sidebar
+        familyName={family?.name ?? "Sua família"}
+        memberName={profile.full_name || "Você"}
+        avatarColor={profile.avatar_color}
+      />
       <main className="mx-auto max-w-5xl px-5 pb-24 pt-6 md:px-10 md:pb-10 md:pt-10">
         {children}
       </main>

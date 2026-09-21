@@ -32,7 +32,7 @@ export default async function OrcamentoPage() {
 
   return (
     <div>
-      <PageHeader title="Orçamento" name={profile.full_name} />
+      <PageHeader title="Orçamento" name={profile.full_name} avatarColor={profile.avatar_color} />
       <PlanTabs active="/orcamento" />
       {familyIncomeCents > 0 && (
         <Card className="mb-4">

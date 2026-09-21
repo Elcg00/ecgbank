@@ -94,7 +94,7 @@ export default async function DashboardPage() {
 
   return (
     <div>
-      <PageHeader title="Início" name={profile.full_name} />
+      <PageHeader title="Início" name={profile.full_name} avatarColor={profile.avatar_color} />
 
       {/* Mobile layout */}
       <div className="flex flex-col gap-4 md:hidden">

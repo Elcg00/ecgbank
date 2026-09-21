@@ -13,7 +13,7 @@ export default async function MetasPage() {
 
   return (
     <div>
-      <PageHeader title="Metas" name={profile.full_name} />
+      <PageHeader title="Metas" name={profile.full_name} avatarColor={profile.avatar_color} />
       <PlanTabs active="/metas" />
       <div className="mb-4 flex justify-end">
         <Link href="/metas/nova" className="inline-flex items-center gap-1 text-[14px] font-semibold text-accent-ink">

@@ -9,7 +9,7 @@ export default async function MaisPage() {
 
   return (
     <div>
-      <PageHeader title="Mais" name={profile.full_name} />
+      <PageHeader title="Mais" name={profile.full_name} avatarColor={profile.avatar_color} />
       <div className="overflow-hidden rounded-card bg-surface shadow-sm">
         {maisMenu.map((item, i) => (
           <Link

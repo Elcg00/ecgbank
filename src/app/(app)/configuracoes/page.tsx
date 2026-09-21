@@ -10,6 +10,7 @@ import { NameForm } from "./NameForm";
 import { PasswordForm } from "./PasswordForm";
 import { IncomeForm } from "./IncomeForm";
 import { PreferencesForm } from "./PreferencesForm";
+import { AvatarColorForm } from "./AvatarColorForm";
 
 export default async function ConfiguracoesPage() {
   const { supabase, profile, email } = await getSessionContext();
@@ -26,13 +27,18 @@ export default async function ConfiguracoesPage() {
   return (
     <div>
       <BackHeader href="/mais" label="Mais" />
-      <PageHeader title="Configurações" name={profile.full_name} />
+      <PageHeader title="Configurações" name={profile.full_name} avatarColor={profile.avatar_color} />
 
       <div className="flex flex-col gap-4 md:max-w-lg">
         <Card>
           <h5 className="mb-3">Seus dados</h5>
           <p className="mb-3 text-[13px] text-ink-muted">{email}</p>
           <NameForm defaultName={profile.full_name} />
+        </Card>
+
+        <Card>
+          <h5 className="mb-3">Cor do avatar</h5>
+          <AvatarColorForm name={profile.full_name} defaultColor={profile.avatar_color} />
         </Card>
 
         <Card>

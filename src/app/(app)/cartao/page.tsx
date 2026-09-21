@@ -23,7 +23,7 @@ export default async function CartaoPage() {
     return (
       <div>
         <BackHeader href="/mais" label="Mais" />
-        <PageHeader title="Cartão de crédito" name={profile.full_name} />
+        <PageHeader title="Cartão de crédito" name={profile.full_name} avatarColor={profile.avatar_color} />
         <Link href="/cartao/novo">
           <Button>+ Cadastrar cartão</Button>
         </Link>
@@ -43,7 +43,7 @@ export default async function CartaoPage() {
   return (
     <div>
       <BackHeader href="/mais" label="Mais" />
-      <PageHeader title="Cartão de crédito" name={profile.full_name} />
+      <PageHeader title="Cartão de crédito" name={profile.full_name} avatarColor={profile.avatar_color} />
 
       <div className="flex flex-col gap-6">
         {cards.map((card) => {

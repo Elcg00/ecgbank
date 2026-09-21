@@ -4,7 +4,15 @@ import { desktopNav } from "@/lib/nav";
 import { NavLink } from "./NavLink";
 import { Monogram } from "@/components/ui/Monogram";
 
-export function Sidebar({ familyName, memberName }: { familyName: string; memberName: string }) {
+export function Sidebar({
+  familyName,
+  memberName,
+  avatarColor,
+}: {
+  familyName: string;
+  memberName: string;
+  avatarColor?: string;
+}) {
   return (
     <aside className="fixed inset-y-0 left-0 hidden w-[248px] flex-col border-r border-divider bg-surface px-4 py-6 md:flex">
       <span className="mb-6 px-3 font-heading text-xl text-accent-ink">ECG BANK</span>
@@ -30,7 +38,7 @@ export function Sidebar({ familyName, memberName }: { familyName: string; member
         href="/configuracoes"
         className="flex items-center gap-3 rounded-2xl bg-surface-2 px-3 py-3 hover:bg-divider/40"
       >
-        <Monogram label={memberName} />
+        <Monogram label={memberName} color={avatarColor} />
         <div className="min-w-0">
           <p className="truncate text-[14px] font-semibold text-ink">{memberName}</p>
           <p className="truncate text-[12px] text-ink-muted">{familyName}</p>

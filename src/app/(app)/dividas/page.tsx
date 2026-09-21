@@ -30,7 +30,7 @@ export default async function DividasPage() {
 
   return (
     <div>
-      <PageHeader title="Dívidas" name={profile.full_name} />
+      <PageHeader title="Dívidas" name={profile.full_name} avatarColor={profile.avatar_color} />
       <PlanTabs active="/dividas" />
 
       <div className="mb-3 flex flex-wrap gap-2">
