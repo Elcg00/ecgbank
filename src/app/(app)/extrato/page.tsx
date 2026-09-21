@@ -11,13 +11,20 @@ const PAYMENT_LABEL: Record<string, string> = {
   credito: "Crédito",
 };
 
+const INCOME_SOURCE_LABEL: Record<string, string> = {
+  salario: "Salário",
+  extra: "Renda extra",
+  reembolso: "Reembolso",
+  outro: "Outro",
+};
+
 export default async function ExtratoPage() {
   const { supabase, profile } = await getSessionContext();
 
   const { data: transactions } = await supabase
     .from("transactions")
     .select(
-      "id, type, amount_cents, occurred_at, payment_method, budget_groups(name), profiles(full_name)",
+      "id, type, amount_cents, occurred_at, payment_method, income_source, budget_groups(name), profiles(full_name)",
     )
     .eq("family_id", profile.family_id)
     .order("occurred_at", { ascending: false })
@@ -40,7 +47,11 @@ export default async function ExtratoPage() {
           {rows.map((t) => {
             const group = (t.budget_groups as unknown as { name: string } | null)?.name;
             const member = (t.profiles as unknown as { full_name: string } | null)?.full_name;
-            const sub = [group, PAYMENT_LABEL[t.payment_method ?? ""], member].filter(Boolean).join(" · ");
+            const income = INCOME_SOURCE_LABEL[t.income_source ?? ""];
+            const title = t.type === "entrada" ? income ?? "Entrada" : group ?? "Sem categoria";
+            const sub = [t.type === "saida" ? PAYMENT_LABEL[t.payment_method ?? ""] : null, member]
+              .filter(Boolean)
+              .join(" · ");
             return (
               <Link
                 key={t.id}
@@ -48,7 +59,7 @@ export default async function ExtratoPage() {
                 className="flex items-center justify-between gap-3 py-3"
               >
                 <div className="min-w-0">
-                  <p className="truncate font-semibold text-ink">{group ?? "Sem categoria"}</p>
+                  <p className="truncate font-semibold text-ink">{title}</p>
                   <p className="truncate text-[13px] text-ink-muted">{sub || "—"}</p>
                 </div>
                 <div className="flex shrink-0 flex-col items-end">

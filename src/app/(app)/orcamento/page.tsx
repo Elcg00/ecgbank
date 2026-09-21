@@ -13,26 +13,48 @@ export default async function OrcamentoPage() {
   const { spentByGroup } = await getMonthSummary(supabase, profile.family_id);
   const groups = await getBudgetGroups(supabase, profile.family_id, spentByGroup);
 
-  const { data: members } = await supabase.from("profiles").select("id").eq("family_id", profile.family_id);
+  const { data: members } = await supabase
+    .from("profiles")
+    .select("id, full_name")
+    .eq("family_id", profile.family_id);
   const { data: incomes } = await supabase
     .from("onboarding_answers")
-    .select("monthly_income_cents")
+    .select("user_id, monthly_income_cents")
     .in("user_id", (members ?? []).map((m) => m.id));
-  const familyIncomeCents = (incomes ?? []).reduce((s, i) => s + i.monthly_income_cents, 0);
+  const incomeByUser = new Map((incomes ?? []).map((i) => [i.user_id, i.monthly_income_cents]));
+  const incomeBreakdown = (members ?? [])
+    .map((m) => ({
+      name: m.id === profile.id ? "Você" : m.full_name || "Membro",
+      cents: incomeByUser.get(m.id) ?? 0,
+    }))
+    .filter((m) => m.cents > 0);
+  const familyIncomeCents = incomeBreakdown.reduce((s, m) => s + m.cents, 0);
 
   return (
     <div>
       <PageHeader title="Orçamento" name={profile.full_name} />
       <PlanTabs active="/orcamento" />
       {familyIncomeCents > 0 && (
-        <Card className="mb-4 flex items-center justify-between gap-3">
-          <div>
-            <p className="text-[13px] text-ink-muted">Renda familiar estimada</p>
-            <h4>{formatCents(familyIncomeCents)}/mês</h4>
+        <Card className="mb-4">
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <p className="text-[13px] text-ink-muted">Renda familiar estimada</p>
+              <h4>{formatCents(familyIncomeCents)}/mês</h4>
+            </div>
+            <Link href="/configuracoes" className="text-[13px] font-semibold text-accent-ink">
+              editar
+            </Link>
           </div>
-          <Link href="/configuracoes" className="text-[13px] font-semibold text-accent-ink">
-            editar
-          </Link>
+          {incomeBreakdown.length > 1 && (
+            <div className="mt-3 flex flex-col gap-1 border-t border-divider pt-3">
+              {incomeBreakdown.map((m) => (
+                <div key={m.name} className="flex items-center justify-between text-[13px] text-ink-muted">
+                  <span>{m.name}</span>
+                  <span className="font-semibold text-ink">{formatCents(m.cents)}</span>
+                </div>
+              ))}
+            </div>
+          )}
         </Card>
       )}
       <div className="mb-4 flex justify-end">

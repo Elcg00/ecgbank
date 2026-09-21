@@ -448,6 +448,7 @@ export type Database = {
           created_at: string
           family_id: string
           id: string
+          income_source: string | null
           installments: number
           occurred_at: string
           payment_method: string | null
@@ -461,6 +462,7 @@ export type Database = {
           created_at?: string
           family_id: string
           id?: string
+          income_source?: string | null
           installments?: number
           occurred_at?: string
           payment_method?: string | null
@@ -474,6 +476,7 @@ export type Database = {
           created_at?: string
           family_id?: string
           id?: string
+          income_source?: string | null
           installments?: number
           occurred_at?: string
           payment_method?: string | null

@@ -16,6 +16,13 @@ const PAYMENT_METHODS = [
   { value: "credito", label: "Crédito" },
 ];
 
+const INCOME_SOURCES = [
+  { value: "salario", label: "Salário" },
+  { value: "extra", label: "Renda extra" },
+  { value: "reembolso", label: "Reembolso" },
+  { value: "outro", label: "Outro" },
+];
+
 const KEYPAD = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "", "0", "back"];
 
 function formatCentsDisplay(cents: number) {
@@ -26,6 +33,7 @@ export function LancarForm({ categories, members }: { categories: Category[]; me
   const [type, setType] = useState<"entrada" | "saida">("saida");
   const [cents, setCents] = useState(0);
   const [categoryId, setCategoryId] = useState<string | null>(null);
+  const [incomeSource, setIncomeSource] = useState<string | null>(null);
   const [paymentMethod, setPaymentMethod] = useState<string | null>(null);
   const [installments, setInstallments] = useState(1);
   const [memberId, setMemberId] = useState<string>(members[0]?.id ?? "");
@@ -52,6 +60,7 @@ export function LancarForm({ categories, members }: { categories: Category[]; me
       <input type="hidden" name="amount_cents" value={cents} />
       <input type="hidden" name="type" value={type} />
       <input type="hidden" name="budget_group_id" value={categoryId ?? ""} />
+      <input type="hidden" name="income_source" value={incomeSource ?? ""} />
       <input type="hidden" name="payment_method" value={paymentMethod ?? ""} />
       <input type="hidden" name="installments" value={installments} />
       <input type="hidden" name="member_id" value={memberId} />
@@ -97,7 +106,7 @@ export function LancarForm({ categories, members }: { categories: Category[]; me
         )}
       </div>
 
-      {categories.length > 0 && (
+      {type === "saida" && categories.length > 0 && (
         <div>
           <p className="mb-2 text-[13px] font-semibold text-ink-muted">Categoria</p>
           <div className="flex gap-3 overflow-x-auto pb-1">
@@ -112,6 +121,28 @@ export function LancarForm({ categories, members }: { categories: Category[]; me
               >
                 <Monogram label={c.name} size="lg" />
                 <span className="text-[12px] text-ink-muted">{c.name}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {type === "entrada" && (
+        <div>
+          <p className="mb-2 text-[13px] font-semibold text-ink-muted">Origem</p>
+          <div className="flex flex-wrap gap-2">
+            {INCOME_SOURCES.map((s) => (
+              <button
+                key={s.value}
+                type="button"
+                onClick={() => setIncomeSource(s.value)}
+                className={`rounded-full border px-4 py-2 text-[14px] font-semibold transition-colors ${
+                  incomeSource === s.value
+                    ? "border-accent-700 bg-accent-100 text-accent-800 dark:bg-accent-900/40 dark:text-accent-300"
+                    : "border-divider text-ink"
+                }`}
+              >
+                {s.label}
               </button>
             ))}
           </div>

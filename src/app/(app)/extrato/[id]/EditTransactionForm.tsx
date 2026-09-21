@@ -1,17 +1,25 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { updateTransaction, deleteTransaction } from "../actions";
 import { Field } from "@/components/ui/Field";
 import { Button } from "@/components/ui/Button";
 import { ConfirmForm } from "@/components/ui/ConfirmForm";
 import { SelectableChip } from "@/components/ui/SelectableChip";
 
+const INCOME_SOURCES = [
+  { value: "salario", label: "Salário" },
+  { value: "extra", label: "Renda extra" },
+  { value: "reembolso", label: "Reembolso" },
+  { value: "outro", label: "Outro" },
+];
+
 type Transaction = {
   id: string;
   type: string;
   amount_cents: number;
   budget_group_id: string | null;
+  income_source: string | null;
   occurred_at: string;
 };
 
@@ -25,6 +33,7 @@ export function EditTransactionForm({
   defaultAmount: string;
 }) {
   const [state, formAction, pending] = useActionState(updateTransaction, undefined);
+  const [type, setType] = useState(transaction.type);
 
   return (
     <div>
@@ -32,7 +41,7 @@ export function EditTransactionForm({
         <input type="hidden" name="id" value={transaction.id} />
         <div>
           <p className="mb-2 text-[13px] font-semibold text-ink-muted">Tipo</p>
-          <div className="flex gap-2">
+          <div className="flex gap-2" onChange={(e) => setType((e.target as HTMLInputElement).value)}>
             <SelectableChip
               name="type"
               value="entrada"
@@ -50,7 +59,7 @@ export function EditTransactionForm({
           </div>
         </div>
         <Field label="Valor" name="amount" inputMode="decimal" prefix="R$" defaultValue={defaultAmount} required />
-        {groups.length > 0 && (
+        {type === "saida" && groups.length > 0 && (
           <div>
             <p className="mb-2 text-[13px] font-semibold text-ink-muted">Categoria</p>
             <div className="flex flex-wrap gap-2">
@@ -62,6 +71,23 @@ export function EditTransactionForm({
                   label={g.name}
                   type="radio"
                   defaultChecked={transaction.budget_group_id === g.id}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+        {type === "entrada" && (
+          <div>
+            <p className="mb-2 text-[13px] font-semibold text-ink-muted">Origem</p>
+            <div className="flex flex-wrap gap-2">
+              {INCOME_SOURCES.map((s) => (
+                <SelectableChip
+                  key={s.value}
+                  name="income_source"
+                  value={s.value}
+                  label={s.label}
+                  type="radio"
+                  defaultChecked={transaction.income_source === s.value}
                 />
               ))}
             </div>

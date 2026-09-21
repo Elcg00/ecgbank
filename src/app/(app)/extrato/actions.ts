@@ -6,12 +6,16 @@ import { redirectWithToast } from "@/lib/toast";
 
 type FormState = { error?: string } | undefined;
 
+const INCOME_SOURCES = ["salario", "extra", "reembolso", "outro"];
+
 export async function updateTransaction(_prev: FormState, formData: FormData): Promise<FormState> {
   const { supabase, profile } = await getSessionContext();
   const id = String(formData.get("id"));
   const type = String(formData.get("type") || "saida");
   const amountCents = parseMoneyToCents(formData.get("amount"));
   const budgetGroupId = String(formData.get("budget_group_id") || "") || null;
+  const incomeSourceRaw = String(formData.get("income_source") || "") || null;
+  const incomeSource = incomeSourceRaw && INCOME_SOURCES.includes(incomeSourceRaw) ? incomeSourceRaw : null;
   const occurredAt = String(formData.get("occurred_at") || "");
 
   if (amountCents <= 0) {
@@ -24,6 +28,7 @@ export async function updateTransaction(_prev: FormState, formData: FormData): P
       type,
       amount_cents: amountCents,
       budget_group_id: type === "saida" ? budgetGroupId : null,
+      income_source: type === "entrada" ? incomeSource : null,
       occurred_at: occurredAt || undefined,
     })
     .eq("id", id)
