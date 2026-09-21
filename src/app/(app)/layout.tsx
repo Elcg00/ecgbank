@@ -8,7 +8,7 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
   const { supabase, profile } = await getSessionContext();
 
   if (!profile.onboarding_completed_at) {
-    redirect("/onboarding");
+    redirect("/onboarding/1");
   }
 
   const { data: family } = await supabase
