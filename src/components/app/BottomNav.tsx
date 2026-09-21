@@ -18,7 +18,13 @@ export function BottomNav() {
             </Link>
           </div>
         ) : (
-          <NavLink key={item.href} item={item} variant="bottom" />
+          <NavLink
+            key={item.href}
+            href={item.href}
+            label={item.label}
+            icon={<item.icon size={22} strokeWidth={2.75} />}
+            variant="bottom"
+          />
         ),
       )}
     </nav>

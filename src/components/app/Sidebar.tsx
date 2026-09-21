@@ -17,7 +17,13 @@ export function Sidebar({ familyName, memberName }: { familyName: string; member
       </Link>
       <nav className="flex flex-1 flex-col gap-1">
         {desktopNav.map((item) => (
-          <NavLink key={item.href} item={item} variant="sidebar" />
+          <NavLink
+            key={item.href}
+            href={item.href}
+            label={item.label}
+            icon={<item.icon size={18} strokeWidth={2.75} />}
+            variant="sidebar"
+          />
         ))}
       </nav>
       <div className="flex items-center gap-3 rounded-2xl bg-surface-2 px-3 py-3">
