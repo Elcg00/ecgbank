@@ -8,12 +8,15 @@ export default async function EditBillPage({ params }: { params: Promise<{ id: s
   const { id } = await params;
   const { supabase, profile } = await getSessionContext();
 
-  const { data: bill } = await supabase
-    .from("bills")
-    .select("id, name, amount_cents, due_date, recurring")
-    .eq("id", id)
-    .eq("family_id", profile.family_id)
-    .maybeSingle();
+  const [{ data: bill }, { data: groups }] = await Promise.all([
+    supabase
+      .from("bills")
+      .select("id, name, amount_cents, due_date, recurring, budget_group_id")
+      .eq("id", id)
+      .eq("family_id", profile.family_id)
+      .maybeSingle(),
+    supabase.from("budget_groups").select("id, name").eq("family_id", profile.family_id).order("sort_order"),
+  ]);
 
   if (!bill) notFound();
 
@@ -21,7 +24,7 @@ export default async function EditBillPage({ params }: { params: Promise<{ id: s
     <div>
       <BackHeader href="/contas" label="Contas a pagar" />
       <h1 className="mb-5">Editar conta</h1>
-      <EditBillForm bill={bill} defaultAmount={centsToInputValue(bill.amount_cents)} />
+      <EditBillForm bill={bill} groups={groups ?? []} defaultAmount={centsToInputValue(bill.amount_cents)} />
     </div>
   );
 }

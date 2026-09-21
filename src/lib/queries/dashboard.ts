@@ -29,7 +29,7 @@ export function groupStatus(kind: "spending" | "saving", limitCents: number, spe
   return { pct, status: "tranquilo" };
 }
 
-function monthRange(date = new Date()) {
+export function monthRange(date = new Date()) {
   const start = new Date(date.getFullYear(), date.getMonth(), 1);
   const end = new Date(date.getFullYear(), date.getMonth() + 1, 1);
   const iso = (d: Date) => d.toISOString().slice(0, 10);

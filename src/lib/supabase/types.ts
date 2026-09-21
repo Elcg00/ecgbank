@@ -17,6 +17,7 @@ export type Database = {
       bills: {
         Row: {
           amount_cents: number
+          budget_group_id: string | null
           created_at: string
           due_date: string
           family_id: string
@@ -25,9 +26,11 @@ export type Database = {
           paid: boolean
           paid_at: string | null
           recurring: boolean
+          transaction_id: string | null
         }
         Insert: {
           amount_cents: number
+          budget_group_id?: string | null
           created_at?: string
           due_date: string
           family_id: string
@@ -36,9 +39,11 @@ export type Database = {
           paid?: boolean
           paid_at?: string | null
           recurring?: boolean
+          transaction_id?: string | null
         }
         Update: {
           amount_cents?: number
+          budget_group_id?: string | null
           created_at?: string
           due_date?: string
           family_id?: string
@@ -47,13 +52,28 @@ export type Database = {
           paid?: boolean
           paid_at?: string | null
           recurring?: boolean
+          transaction_id?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "bills_budget_group_id_fkey"
+            columns: ["budget_group_id"]
+            isOneToOne: false
+            referencedRelation: "budget_groups"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "bills_family_id_fkey"
             columns: ["family_id"]
             isOneToOne: false
             referencedRelation: "families"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bills_transaction_id_fkey"
+            columns: ["transaction_id"]
+            isOneToOne: false
+            referencedRelation: "transactions"
             referencedColumns: ["id"]
           },
         ]

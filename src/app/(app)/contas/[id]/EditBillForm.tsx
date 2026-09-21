@@ -3,12 +3,29 @@
 import { useActionState } from "react";
 import { updateBill, deleteBill } from "../actions";
 import { Field } from "@/components/ui/Field";
+import { Select } from "@/components/ui/Select";
 import { Button } from "@/components/ui/Button";
 import { ConfirmForm } from "@/components/ui/ConfirmForm";
 
-type Bill = { id: string; name: string; amount_cents: number; due_date: string; recurring: boolean };
+type Bill = {
+  id: string;
+  name: string;
+  amount_cents: number;
+  due_date: string;
+  recurring: boolean;
+  budget_group_id: string | null;
+};
+type Group = { id: string; name: string };
 
-export function EditBillForm({ bill, defaultAmount }: { bill: Bill; defaultAmount: string }) {
+export function EditBillForm({
+  bill,
+  groups,
+  defaultAmount,
+}: {
+  bill: Bill;
+  groups: Group[];
+  defaultAmount: string;
+}) {
   const [state, formAction, pending] = useActionState(updateBill, undefined);
 
   return (
@@ -18,6 +35,16 @@ export function EditBillForm({ bill, defaultAmount }: { bill: Bill; defaultAmoun
         <Field label="Nome da conta" name="name" defaultValue={bill.name} required />
         <Field label="Valor" name="amount" inputMode="decimal" prefix="R$" defaultValue={defaultAmount} required />
         <Field label="Vencimento" name="due_date" type="date" defaultValue={bill.due_date} required />
+        {groups.length > 0 && (
+          <Select label="Categoria (opcional)" name="budget_group_id" defaultValue={bill.budget_group_id ?? ""}>
+            <option value="">Sem categoria</option>
+            {groups.map((g) => (
+              <option key={g.id} value={g.id}>
+                {g.name}
+              </option>
+            ))}
+          </Select>
+        )}
         <label className="flex items-center gap-2 text-[14px] font-semibold text-ink">
           <input type="checkbox" name="recurring" defaultChecked={bill.recurring} className="h-4 w-4 accent-accent-700" />
           Conta recorrente (repete todo mês)

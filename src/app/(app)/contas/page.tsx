@@ -1,11 +1,11 @@
 import Link from "next/link";
-import { Plus, ChevronRight } from "lucide-react";
+import { Plus, ChevronRight, Repeat, Circle, CheckCircle2 } from "lucide-react";
 import { getSessionContext } from "@/lib/session";
 import { BackHeader } from "@/components/app/BackHeader";
 import { PageHeader } from "@/components/app/PageHeader";
 import { Card } from "@/components/ui/Card";
 import { StatusPill, type Status } from "@/components/ui/StatusPill";
-import { Repeat } from "lucide-react";
+import { ConfirmForm } from "@/components/ui/ConfirmForm";
 import { formatCents, billDueLabel } from "@/lib/format";
 import { rollRecurringBills } from "@/lib/queries/bills";
 import { markBillPaid } from "./actions";
@@ -18,7 +18,7 @@ export default async function ContasPage() {
   await rollRecurringBills(supabase, profile.family_id);
   const { data: bills } = await supabase
     .from("bills")
-    .select("id, name, amount_cents, due_date, paid, recurring")
+    .select("id, name, amount_cents, due_date, paid, recurring, budget_groups(name)")
     .eq("family_id", profile.family_id)
     .order("due_date");
 
@@ -34,6 +34,7 @@ export default async function ContasPage() {
       <div className="flex flex-col gap-3 md:grid md:grid-cols-2 md:gap-4">
         {(bills ?? []).map((bill) => {
           const { label, status } = billDueLabel(bill.due_date, bill.paid);
+          const group = (bill.budget_groups as unknown as { name: string } | null)?.name;
           return (
             <Card key={bill.id} className="flex items-center justify-between gap-3">
               <Link href={`/contas/${bill.id}`} className="flex min-w-0 flex-1 items-center gap-1">
@@ -44,19 +45,44 @@ export default async function ContasPage() {
                       <Repeat size={13} strokeWidth={2.75} className="shrink-0 text-ink-muted" aria-label="Recorrente" />
                     )}
                   </p>
-                  <p className="truncate text-[13px] text-ink-muted">{label}</p>
+                  <p className="truncate text-[13px] text-ink-muted">
+                    {label}
+                    {group && ` · ${group}`}
+                  </p>
+                  {!bill.paid && (
+                    <StatusPill status={STATUS_PILL[status]}>{STATUS_LABEL[status]}</StatusPill>
+                  )}
                 </div>
                 <ChevronRight size={16} className="shrink-0 text-ink-muted" />
               </Link>
               <div className="flex shrink-0 flex-col items-end gap-1.5">
                 <span className="font-semibold text-ink">{formatCents(bill.amount_cents)}</span>
-                <form action={markBillPaid}>
-                  <input type="hidden" name="bill_id" value={bill.id} />
-                  <input type="hidden" name="paid" value={(!bill.paid).toString()} />
-                  <button type="submit">
-                    <StatusPill status={STATUS_PILL[status]}>{STATUS_LABEL[status]}</StatusPill>
-                  </button>
-                </form>
+                {bill.paid ? (
+                  <ConfirmForm
+                    action={markBillPaid}
+                    confirmMessage="Desfazer o pagamento? Isso remove o lançamento de saída correspondente no Extrato."
+                  >
+                    <input type="hidden" name="bill_id" value={bill.id} />
+                    <input type="hidden" name="paid" value="false" />
+                    <button
+                      type="submit"
+                      className="inline-flex items-center gap-1.5 rounded-full bg-positive-bg px-3 py-1.5 text-[13px] font-semibold text-positive"
+                    >
+                      <CheckCircle2 size={15} strokeWidth={2.75} /> Paga
+                    </button>
+                  </ConfirmForm>
+                ) : (
+                  <form action={markBillPaid}>
+                    <input type="hidden" name="bill_id" value={bill.id} />
+                    <input type="hidden" name="paid" value="true" />
+                    <button
+                      type="submit"
+                      className="inline-flex items-center gap-1.5 rounded-full border border-accent-700 px-3 py-1.5 text-[13px] font-semibold text-accent-ink hover:bg-accent-100 dark:hover:bg-accent-900/40"
+                    >
+                      <Circle size={15} strokeWidth={2.75} /> Marcar como paga
+                    </button>
+                  </form>
+                )}
               </div>
             </Card>
           );

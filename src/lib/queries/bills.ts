@@ -32,7 +32,10 @@ export async function rollRecurringBills(supabase: SupabaseClient, familyId: str
       for (let i = 0; i < 24 && nextDue < today; i++) {
         nextDue = addMonths(nextDue, 1);
       }
-      return supabase.from("bills").update({ due_date: nextDue, paid: false, paid_at: null }).eq("id", bill.id);
+      return supabase
+        .from("bills")
+        .update({ due_date: nextDue, paid: false, paid_at: null, transaction_id: null })
+        .eq("id", bill.id);
     }),
   );
 }
