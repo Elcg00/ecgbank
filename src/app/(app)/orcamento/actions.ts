@@ -57,7 +57,7 @@ export async function updateGroup(_prev: FormState, formData: FormData): Promise
 
   if (error) return { error: "Não foi possível salvar. Tente novamente." };
 
-  redirectWithToast("/orcamento", "Grupo atualizado!");
+  redirectWithToast(`/orcamento/${groupId}`, "Grupo atualizado!");
 }
 
 export async function deleteGroup(formData: FormData) {

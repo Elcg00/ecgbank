@@ -5,7 +5,7 @@ import { StatusPill, type Status } from "@/components/ui/StatusPill";
 import { formatCents } from "@/lib/format";
 import { groupStatusLabel, type BudgetGroupSummary } from "@/lib/queries/dashboard";
 
-const STATUS_TO_PILL: Record<BudgetGroupSummary["status"], Status> = {
+export const STATUS_TO_PILL: Record<BudgetGroupSummary["status"], Status> = {
   tranquilo: "positivo",
   atencao: "atencao",
   passou: "negativo",
@@ -13,7 +13,7 @@ const STATUS_TO_PILL: Record<BudgetGroupSummary["status"], Status> = {
   sem_limite: "positivo",
 };
 
-const STATUS_TO_BAR: Record<BudgetGroupSummary["status"], "accent" | "positive" | "warning" | "negative"> = {
+export const STATUS_TO_BAR: Record<BudgetGroupSummary["status"], "accent" | "positive" | "warning" | "negative"> = {
   tranquilo: "positive",
   atencao: "warning",
   passou: "negative",

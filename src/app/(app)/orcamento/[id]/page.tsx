@@ -1,18 +1,28 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { Pencil } from "lucide-react";
 import { getSessionContext } from "@/lib/session";
 import { getMonthSummary, getBudgetGroups, groupStatusLabel, monthRange } from "@/lib/queries/dashboard";
 import { BackHeader } from "@/components/app/BackHeader";
+import { Monogram } from "@/components/ui/Monogram";
 import { Card } from "@/components/ui/Card";
 import { ProgressBar } from "@/components/ui/ProgressBar";
-import { formatCents, formatDate, centsToInputValue } from "@/lib/format";
-import { EditGroupForm } from "./EditGroupForm";
+import { formatCents, formatDate } from "@/lib/format";
+import { STATUS_TO_BAR } from "@/components/app/GroupRow";
 
 const PAYMENT_LABEL: Record<string, string> = {
   dinheiro: "Dinheiro",
   pix: "Pix",
   debito: "Débito",
   credito: "Crédito",
+};
+
+const STATUS_TEXT_COLOR: Record<string, string> = {
+  tranquilo: "text-positive",
+  atencao: "text-warning",
+  passou: "text-negative",
+  guardado: "text-accent-ink",
+  sem_limite: "text-ink-muted",
 };
 
 export default async function BudgetGroupPage({ params }: { params: Promise<{ id: string }> }) {
@@ -23,6 +33,8 @@ export default async function BudgetGroupPage({ params }: { params: Promise<{ id
   const group = groups.find((g) => g.id === id);
 
   if (!group) notFound();
+
+  const remainingCents = group.limitCents - group.spentCents;
 
   const { start, end } = monthRange();
   const { data: transactions } = await supabase
@@ -39,21 +51,53 @@ export default async function BudgetGroupPage({ params }: { params: Promise<{ id
   return (
     <div>
       <BackHeader href="/orcamento" label="Orçamento" />
-      <h1 className="mb-5">{group.name}</h1>
-      <Card className="mb-4 flex flex-col gap-3">
-        <ProgressBar pct={group.limitCents > 0 ? group.pct : 0} />
-        <p className="text-[14px] text-ink-muted">
-          {formatCents(group.spentCents)}
-          {group.limitCents > 0 && ` de ${formatCents(group.limitCents)}`} gastos este mês
-        </p>
+
+      <div className="mb-5 flex items-center justify-between gap-3">
+        <div className="flex items-center gap-3">
+          <Monogram label={group.name} size="lg" />
+          <h1>{group.name}</h1>
+        </div>
+        <Link
+          href={`/orcamento/${group.id}/editar`}
+          className="inline-flex items-center gap-1.5 rounded-full border border-divider px-4 py-2 text-[14px] font-semibold text-ink hover:bg-surface-2"
+        >
+          <Pencil size={15} strokeWidth={2.75} /> Editar
+        </Link>
+      </div>
+
+      <Card className="mb-4">
+        <div className="mb-3 flex items-end justify-between gap-3">
+          <div>
+            <p className="text-[13px] text-ink-muted">Gasto este mês</p>
+            <h2>{formatCents(group.spentCents)}</h2>
+          </div>
+          {group.limitCents > 0 && (
+            <div className="text-right">
+              <p className={`text-[22px] font-heading ${STATUS_TEXT_COLOR[group.status]}`}>{group.pct}%</p>
+              <p className={`text-[13px] font-semibold ${STATUS_TEXT_COLOR[group.status]}`}>
+                {groupStatusLabel(group.status, group.pct, group.kind)}
+              </p>
+            </div>
+          )}
+        </div>
+        <ProgressBar
+          pct={group.limitCents > 0 ? group.pct : 0}
+          color={STATUS_TO_BAR[group.status]}
+          className="h-3"
+        />
         {group.limitCents > 0 && (
-          <p className="text-[14px] font-semibold text-ink">
-            {groupStatusLabel(group.status, group.pct, group.kind)}
-          </p>
+          <div className="mt-3 flex items-center justify-between text-[13px] text-ink-muted">
+            <span>Limite de {formatCents(group.limitCents)}</span>
+            <span className={remainingCents < 0 ? "font-semibold text-negative" : ""}>
+              {remainingCents >= 0
+                ? `Restam ${formatCents(remainingCents)}`
+                : `Passou ${formatCents(-remainingCents)}`}
+            </span>
+          </div>
         )}
       </Card>
 
-      <Card className="mb-4">
+      <Card>
         <h5 className="mb-3">Com o que foi gasto</h5>
         <div className="divide-y divide-divider">
           {(transactions ?? []).map((t) => {
@@ -79,15 +123,6 @@ export default async function BudgetGroupPage({ params }: { params: Promise<{ id
             <p className="py-2 text-[14px] text-ink-muted">Nenhum gasto neste grupo ainda este mês.</p>
           )}
         </div>
-      </Card>
-
-      <Card>
-        <h5 className="mb-3">Editar grupo</h5>
-        <EditGroupForm
-          groupId={group.id}
-          name={group.name}
-          defaultLimit={group.limitCents > 0 ? centsToInputValue(group.limitCents) : ""}
-        />
       </Card>
     </div>
   );
