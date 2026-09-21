@@ -1,8 +1,10 @@
 import type { ReactNode } from "react";
+import { ToastListener } from "@/components/app/ToastListener";
 
 export default function AuthLayout({ children }: { children: ReactNode }) {
   return (
     <div className="flex min-h-dvh items-center justify-center bg-app px-5 py-10">
+      <ToastListener />
       <div className="w-full max-w-[420px]">
         <div className="mb-8 text-center">
           <span className="font-heading text-2xl text-accent-ink">ECG BANK</span>

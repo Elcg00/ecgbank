@@ -2,6 +2,7 @@ import "server-only";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { ensureFamily } from "@/lib/family";
+import { redirectWithError } from "@/lib/toast";
 
 export type SessionContext = {
   supabase: Awaited<ReturnType<typeof createClient>>;
@@ -32,12 +33,17 @@ export async function getSessionContext(): Promise<SessionContext> {
   const { data: profile, error } = await supabase
     .from("profiles")
     .select(
-      "id, family_id, full_name, role, onboarding_completed_at, theme_preference, accent_theme, heading_style, avatar_color",
+      "id, family_id, full_name, role, onboarding_completed_at, theme_preference, accent_theme, heading_style, avatar_color, deactivated_at",
     )
     .eq("id", user.id)
     .single();
 
   if (error || !profile) redirect("/login");
+
+  if (profile.deactivated_at) {
+    await supabase.auth.signOut();
+    redirectWithError("/login", "Sua conta foi desativada. Peça a um administrador da família para reativar.");
+  }
 
   const familyId = await ensureFamily(supabase, profile, user.email);
 

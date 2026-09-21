@@ -5,6 +5,7 @@ import { getSessionContext } from "@/lib/session";
 import { parseMoneyToCents } from "@/lib/format";
 import { normalizePreferences, setPreferenceCookies } from "@/lib/preferences";
 import { AVATAR_COLORS } from "@/lib/avatar-colors";
+import { redirectWithError } from "@/lib/toast";
 
 export async function updateName(
   _prev: { error?: string; saved?: boolean } | undefined,
@@ -59,6 +60,18 @@ export async function updatePreferences(
   await setPreferenceCookies(prefs);
   revalidatePath("/", "layout");
   return { saved: true };
+}
+
+export async function deactivateAccount() {
+  const { supabase, profile } = await getSessionContext();
+
+  await supabase
+    .from("profiles")
+    .update({ deactivated_at: new Date().toISOString() })
+    .eq("id", profile.id);
+  await supabase.auth.signOut();
+
+  redirectWithError("/login", "Sua conta foi desativada. Peça a um administrador da família para reativar.");
 }
 
 export async function updateAvatarColor(

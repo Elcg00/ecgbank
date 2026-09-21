@@ -405,6 +405,7 @@ export type Database = {
           accent_theme: string
           avatar_color: string
           created_at: string
+          deactivated_at: string | null
           family_id: string | null
           full_name: string
           heading_style: string
@@ -417,6 +418,7 @@ export type Database = {
           accent_theme?: string
           avatar_color?: string
           created_at?: string
+          deactivated_at?: string | null
           family_id?: string | null
           full_name?: string
           heading_style?: string
@@ -429,6 +431,7 @@ export type Database = {
           accent_theme?: string
           avatar_color?: string
           created_at?: string
+          deactivated_at?: string | null
           family_id?: string | null
           full_name?: string
           heading_style?: string
@@ -520,6 +523,10 @@ export type Database = {
     }
     Functions: {
       current_family_id: { Args: never; Returns: string }
+      deactivate_family_member: {
+        Args: { p_deactivated: boolean; p_member_id: string }
+        Returns: undefined
+      }
       provision_family: { Args: { p_name: string }; Returns: string }
       remove_family_member: {
         Args: { p_member_id: string }

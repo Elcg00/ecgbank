@@ -4,6 +4,7 @@ import { getSessionContext } from "@/lib/session";
 import { signOut } from "@/app/(auth)/actions";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
+import { ConfirmForm } from "@/components/ui/ConfirmForm";
 import { centsToInputValue } from "@/lib/format";
 import { normalizePreferences } from "@/lib/preferences";
 import { NameForm } from "./NameForm";
@@ -11,6 +12,7 @@ import { PasswordForm } from "./PasswordForm";
 import { IncomeForm } from "./IncomeForm";
 import { PreferencesForm } from "./PreferencesForm";
 import { AvatarColorForm } from "./AvatarColorForm";
+import { deactivateAccount } from "./actions";
 
 export default async function ConfiguracoesPage() {
   const { supabase, profile, email } = await getSessionContext();
@@ -75,6 +77,22 @@ export default async function ConfiguracoesPage() {
               Sair da conta
             </Button>
           </form>
+        </Card>
+
+        <Card>
+          <h5 className="mb-1">Desativar conta</h5>
+          <p className="mb-3 text-[13px] text-ink-muted">
+            Você deixa de conseguir entrar até um administrador da família reativar seu acesso. Seus
+            dados continuam guardados.
+          </p>
+          <ConfirmForm
+            action={deactivateAccount}
+            confirmMessage="Desativar sua conta? Você não conseguirá mais entrar até um administrador da família reativar seu acesso."
+          >
+            <Button type="submit" variant="secondary" className="w-full text-negative">
+              Desativar minha conta
+            </Button>
+          </ConfirmForm>
         </Card>
       </div>
     </div>

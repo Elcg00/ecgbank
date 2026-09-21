@@ -23,12 +23,18 @@ export async function signIn(_prev: { error?: string } | undefined, formData: Fo
     return { error: "E-mail ou senha incorretos." };
   }
 
-  const { data: prefs } = await supabase
+  const { data: profile } = await supabase
     .from("profiles")
-    .select("theme_preference, accent_theme, heading_style")
+    .select("theme_preference, accent_theme, heading_style, deactivated_at")
     .eq("id", data.user.id)
     .maybeSingle();
-  if (prefs) await setPreferenceCookies(normalizePreferences(prefs));
+
+  if (profile?.deactivated_at) {
+    await supabase.auth.signOut();
+    return { error: "Esta conta foi desativada. Peça a um administrador da família para reativar." };
+  }
+
+  if (profile) await setPreferenceCookies(normalizePreferences(profile));
 
   redirect("/");
 }

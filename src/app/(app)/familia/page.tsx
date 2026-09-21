@@ -6,7 +6,7 @@ import { Monogram } from "@/components/ui/Monogram";
 import { Field } from "@/components/ui/Field";
 import { Button } from "@/components/ui/Button";
 import { ConfirmForm } from "@/components/ui/ConfirmForm";
-import { inviteMember, revokeInvite, removeMember, toggleMemberRole } from "./actions";
+import { inviteMember, revokeInvite, removeMember, toggleMemberRole, toggleMemberActive } from "./actions";
 
 export default async function FamiliaPage() {
   const { supabase, profile } = await getSessionContext();
@@ -14,7 +14,7 @@ export default async function FamiliaPage() {
   const [{ data: members }, { data: invites }] = await Promise.all([
     supabase
       .from("profiles")
-      .select("id, full_name, role, avatar_color")
+      .select("id, full_name, role, avatar_color, deactivated_at")
       .eq("family_id", profile.family_id)
       .order("created_at"),
     supabase
@@ -45,6 +45,9 @@ export default async function FamiliaPage() {
                 <p className="text-[13px] text-ink-muted">
                   {m.role === "admin" ? "Administrador(a) — edita tudo" : "Pode lançar e ver tudo"}
                 </p>
+                {m.deactivated_at && (
+                  <p className="text-[12px] font-semibold text-negative">Acesso desativado</p>
+                )}
               </div>
               {isAdmin && !isSelf && (
                 <div className="flex shrink-0 flex-col items-end gap-1.5">
@@ -53,6 +56,13 @@ export default async function FamiliaPage() {
                     <input type="hidden" name="new_role" value={m.role === "admin" ? "member" : "admin"} />
                     <button type="submit" className="text-[12px] font-semibold text-accent-ink">
                       {m.role === "admin" ? "Tornar membro" : "Tornar admin"}
+                    </button>
+                  </form>
+                  <form action={toggleMemberActive}>
+                    <input type="hidden" name="member_id" value={m.id} />
+                    <input type="hidden" name="deactivate" value={m.deactivated_at ? "false" : "true"} />
+                    <button type="submit" className="text-[12px] font-semibold text-warning">
+                      {m.deactivated_at ? "Reativar acesso" : "Desativar acesso"}
                     </button>
                   </form>
                   <ConfirmForm

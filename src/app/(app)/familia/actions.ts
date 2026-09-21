@@ -58,3 +58,17 @@ export async function toggleMemberRole(formData: FormData) {
 
   redirectWithToast("/familia", "Papel atualizado!");
 }
+
+export async function toggleMemberActive(formData: FormData) {
+  const { supabase } = await getSessionContext();
+  const memberId = String(formData.get("member_id"));
+  const deactivate = formData.get("deactivate") === "true";
+
+  const { error } = await supabase.rpc("deactivate_family_member", {
+    p_member_id: memberId,
+    p_deactivated: deactivate,
+  });
+  if (error) redirectWithError("/familia", "Não foi possível atualizar o acesso desse membro.");
+
+  redirectWithToast("/familia", deactivate ? "Acesso desativado." : "Acesso reativado!");
+}
