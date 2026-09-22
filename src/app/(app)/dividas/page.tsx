@@ -7,7 +7,7 @@ import { PlanTabs } from "@/components/app/PlanTabs";
 import { Card } from "@/components/ui/Card";
 import { ProgressBar } from "@/components/ui/ProgressBar";
 import { Button } from "@/components/ui/Button";
-import { Field } from "@/components/ui/Field";
+import { MoneyField } from "@/components/ui/MoneyField";
 import { formatCents } from "@/lib/format";
 import { setDebtStrategy, registerDebtPayment } from "./actions";
 
@@ -72,7 +72,7 @@ export default async function DividasPage() {
             <p className="text-[13px] font-semibold text-positive">{d.paidPct}% pago</p>
             <form action={registerDebtPayment} className="flex items-end gap-2">
               <input type="hidden" name="debt_id" value={d.id} />
-              <Field label="Registrar pagamento" name="amount" inputMode="decimal" prefix="R$" placeholder="100" />
+              <MoneyField label="Registrar pagamento" name="amount" placeholder="100" />
               <Button type="submit" variant="secondary">
                 OK
               </Button>

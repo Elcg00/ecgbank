@@ -3,6 +3,7 @@
 import { useActionState } from "react";
 import { updateBill, deleteBill } from "../actions";
 import { Field } from "@/components/ui/Field";
+import { MoneyField } from "@/components/ui/MoneyField";
 import { Select } from "@/components/ui/Select";
 import { Button } from "@/components/ui/Button";
 import { ConfirmForm } from "@/components/ui/ConfirmForm";
@@ -33,7 +34,7 @@ export function EditBillForm({
       <form action={formAction} className="flex flex-col gap-4">
         <input type="hidden" name="bill_id" value={bill.id} />
         <Field label="Nome da conta" name="name" defaultValue={bill.name} required />
-        <Field label="Valor" name="amount" inputMode="decimal" prefix="R$" defaultValue={defaultAmount} required />
+        <MoneyField label="Valor" name="amount" defaultValue={defaultAmount} required />
         <Field label="Vencimento" name="due_date" type="date" defaultValue={bill.due_date} required />
         {groups.length > 0 && (
           <Select label="Categoria (opcional)" name="budget_group_id" defaultValue={bill.budget_group_id ?? ""}>

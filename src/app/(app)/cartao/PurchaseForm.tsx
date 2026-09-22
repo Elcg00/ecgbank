@@ -3,6 +3,7 @@
 import { useActionState } from "react";
 import { createPurchase } from "./actions";
 import { Field } from "@/components/ui/Field";
+import { MoneyField } from "@/components/ui/MoneyField";
 import { Select } from "@/components/ui/Select";
 import { Button } from "@/components/ui/Button";
 
@@ -15,7 +16,7 @@ export function PurchaseForm({ cardId, groups }: { cardId: string; groups: Group
     <form action={formAction} className="grid gap-4 sm:grid-cols-2">
       <input type="hidden" name="card_id" value={cardId} />
       <Field label="Nome da compra" name="name" required placeholder="Notebook" />
-      <Field label="Valor total da compra" name="amount" inputMode="decimal" prefix="R$" required placeholder="2.500" />
+      <MoneyField label="Valor total da compra" name="amount" required placeholder="2.500" />
       <Field label="Parcela atual" name="installment_current" inputMode="numeric" placeholder="4" defaultValue="1" />
       <Field label="Total de parcelas" name="installment_total" inputMode="numeric" placeholder="10" defaultValue="1" />
       {groups.length > 0 && (

@@ -5,6 +5,7 @@ import { getMonthSummary, getBudgetGroups } from "@/lib/queries/dashboard";
 import { PageHeader } from "@/components/app/PageHeader";
 import { PlanTabs } from "@/components/app/PlanTabs";
 import { GroupRow } from "@/components/app/GroupRow";
+import { CategorySpendChart } from "@/components/app/CategorySpendChart";
 import { Card } from "@/components/ui/Card";
 import { formatCents } from "@/lib/format";
 
@@ -60,6 +61,10 @@ export default async function OrcamentoPage() {
           )}
         </Card>
       )}
+      <CategorySpendChart
+        groups={groups.filter((g) => g.kind === "spending").map((g) => ({ id: g.id, name: g.name, spentCents: g.spentCents }))}
+      />
+
       <div className="mb-4 flex justify-end">
         <Link href="/orcamento/nova" className="inline-flex items-center gap-1 text-[14px] font-semibold text-accent-ink">
           <Plus size={16} strokeWidth={2.75} /> Novo grupo

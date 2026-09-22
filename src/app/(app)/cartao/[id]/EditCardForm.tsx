@@ -3,6 +3,7 @@
 import { useActionState } from "react";
 import { updateCard, deleteCard } from "../actions";
 import { Field } from "@/components/ui/Field";
+import { MoneyField } from "@/components/ui/MoneyField";
 import { Button } from "@/components/ui/Button";
 import { ConfirmForm } from "@/components/ui/ConfirmForm";
 
@@ -16,7 +17,7 @@ export function EditCardForm({ card, defaultLimit }: { card: Card; defaultLimit:
       <form action={formAction} className="flex flex-col gap-4">
         <input type="hidden" name="card_id" value={card.id} />
         <Field label="Nome do cartão" name="name" defaultValue={card.name} required />
-        <Field label="Limite" name="limit" inputMode="decimal" prefix="R$" defaultValue={defaultLimit} />
+        <MoneyField label="Limite" name="limit" defaultValue={defaultLimit} />
         <Field label="Dia de fechamento" name="closing_day" inputMode="numeric" defaultValue={String(card.closing_day)} />
         <Field label="Dia de vencimento" name="due_day" inputMode="numeric" defaultValue={String(card.due_day)} />
         {state?.error && <p className="text-[14px] text-negative">{state.error}</p>}

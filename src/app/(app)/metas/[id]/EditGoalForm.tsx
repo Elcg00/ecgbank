@@ -3,6 +3,7 @@
 import { useActionState } from "react";
 import { updateGoal, deleteGoal } from "../actions";
 import { Field } from "@/components/ui/Field";
+import { MoneyField } from "@/components/ui/MoneyField";
 import { Button } from "@/components/ui/Button";
 import { ConfirmForm } from "@/components/ui/ConfirmForm";
 
@@ -29,21 +30,8 @@ export function EditGoalForm({
       <form action={formAction} className="flex flex-col gap-4">
         <input type="hidden" name="goal_id" value={goal.id} />
         <Field label="Nome da meta" name="name" defaultValue={goal.name} required />
-        <Field
-          label="Valor alvo"
-          name="target"
-          inputMode="decimal"
-          prefix="R$"
-          defaultValue={defaultTarget}
-          required
-        />
-        <Field
-          label="Guardar por mês"
-          name="monthly_target"
-          inputMode="decimal"
-          prefix="R$"
-          defaultValue={defaultMonthlyTarget}
-        />
+        <MoneyField label="Valor alvo" name="target" defaultValue={defaultTarget} required />
+        <MoneyField label="Guardar por mês" name="monthly_target" defaultValue={defaultMonthlyTarget} />
         <Field label="Prazo" name="deadline" type="date" defaultValue={goal.deadline ?? ""} />
         <label className="flex items-center gap-2 text-[14px] font-semibold text-ink">
           <input type="checkbox" name="shared" defaultChecked={goal.shared} className="h-4 w-4 accent-accent-700" />

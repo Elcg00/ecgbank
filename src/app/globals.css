@@ -49,6 +49,17 @@
      needs a lighter step in dark mode to stay legible on dark surfaces. */
   --color-accent-ink: var(--color-accent-700);
 
+  /* Categorical chart palette (identity, not brand) — fixed hue order,
+     validated for CVD-safety and contrast against this app's surfaces via
+     the dataviz skill's validator. Never reorder or cycle these. */
+  --chart-series-1: #2a78d6;
+  --chart-series-2: #eb6834;
+  --chart-series-3: #1baf7a;
+  --chart-series-4: #eda100;
+  --chart-series-5: #e87ba4;
+  --chart-series-6: #008300;
+  --chart-other: var(--color-neutral-500);
+
   --radius-sm: 8px;
   --radius-md: 16px;
   --radius-lg: 28px;
@@ -77,6 +88,13 @@
     --color-warning-bg: rgb(224 178 90 / 20%);
     --color-accent-ink: var(--color-accent-400);
 
+    --chart-series-1: #3987e5;
+    --chart-series-2: #d95926;
+    --chart-series-3: #199e70;
+    --chart-series-4: #c98500;
+    --chart-series-5: #d55181;
+    --chart-series-6: #008300;
+
     --shadow-sm: 0 1px 2px rgb(0 0 0 / 30%);
     --shadow-md: 0 3px 10px rgb(0 0 0 / 32%);
     --shadow-lg: 0 12px 32px rgb(0 0 0 / 40%);
@@ -98,6 +116,13 @@
   --color-warning: #e0b25a;
   --color-warning-bg: rgb(224 178 90 / 20%);
   --color-accent-ink: var(--color-accent-400);
+
+  --chart-series-1: #3987e5;
+  --chart-series-2: #d95926;
+  --chart-series-3: #199e70;
+  --chart-series-4: #c98500;
+  --chart-series-5: #d55181;
+  --chart-series-6: #008300;
 
   --shadow-sm: 0 1px 2px rgb(0 0 0 / 30%);
   --shadow-md: 0 3px 10px rgb(0 0 0 / 32%);

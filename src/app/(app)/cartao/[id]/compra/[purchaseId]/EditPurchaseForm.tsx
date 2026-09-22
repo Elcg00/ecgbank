@@ -3,6 +3,7 @@
 import { useActionState } from "react";
 import { updatePurchase, deletePurchase } from "../../../actions";
 import { Field } from "@/components/ui/Field";
+import { MoneyField } from "@/components/ui/MoneyField";
 import { Select } from "@/components/ui/Select";
 import { Button } from "@/components/ui/Button";
 import { ConfirmForm } from "@/components/ui/ConfirmForm";
@@ -35,14 +36,7 @@ export function EditPurchaseForm({
         <input type="hidden" name="purchase_id" value={purchase.id} />
         <input type="hidden" name="card_id" value={cardId} />
         <Field label="Nome da compra" name="name" defaultValue={purchase.name} required />
-        <Field
-          label="Valor total da compra"
-          name="amount"
-          inputMode="decimal"
-          prefix="R$"
-          defaultValue={defaultAmount}
-          required
-        />
+        <MoneyField label="Valor total da compra" name="amount" defaultValue={defaultAmount} required />
         <Field
           label="Parcela atual"
           name="installment_current"

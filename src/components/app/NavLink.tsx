@@ -3,17 +3,20 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
+import { CountBadge } from "@/components/ui/CountBadge";
 
 export function NavLink({
   href,
   label,
   icon,
   variant,
+  badge,
 }: {
   href: string;
   label: string;
   icon: ReactNode;
   variant: "sidebar" | "bottom";
+  badge?: number;
 }) {
   const pathname = usePathname();
   const active = href === "/" ? pathname === "/" : pathname.startsWith(href);
@@ -26,7 +29,10 @@ export function NavLink({
           active ? "text-accent-ink" : "text-ink-muted"
         }`}
       >
-        {icon}
+        <span className="relative">
+          {icon}
+          <CountBadge count={badge ?? 0} className="absolute -right-1.5 -top-1.5 h-4 min-w-4 px-1 text-[10px]" />
+        </span>
         {label}
       </Link>
     );
@@ -44,7 +50,8 @@ export function NavLink({
         aria-hidden
       />
       {icon}
-      {label}
+      <span className="flex-1">{label}</span>
+      <CountBadge count={badge ?? 0} className="h-5 min-w-5 px-1.5 text-[11px]" />
     </Link>
   );
 }

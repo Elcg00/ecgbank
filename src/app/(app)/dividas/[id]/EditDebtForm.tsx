@@ -3,6 +3,7 @@
 import { useActionState } from "react";
 import { updateDebt, deleteDebt } from "../actions";
 import { Field } from "@/components/ui/Field";
+import { MoneyField } from "@/components/ui/MoneyField";
 import { Button } from "@/components/ui/Button";
 import { ConfirmForm } from "@/components/ui/ConfirmForm";
 
@@ -29,14 +30,7 @@ export function EditDebtForm({
       <form action={formAction} className="flex flex-col gap-4">
         <input type="hidden" name="debt_id" value={debt.id} />
         <Field label="Nome da dívida" name="name" defaultValue={debt.name} required />
-        <Field
-          label="Valor restante"
-          name="remaining"
-          inputMode="decimal"
-          prefix="R$"
-          defaultValue={defaultRemaining}
-          required
-        />
+        <MoneyField label="Valor restante" name="remaining" defaultValue={defaultRemaining} required />
         <Field
           label="Juros ao mês (%)"
           name="interest_rate"
@@ -49,13 +43,7 @@ export function EditDebtForm({
           inputMode="numeric"
           defaultValue={String(debt.installment_count)}
         />
-        <Field
-          label="Valor da parcela"
-          name="installment_amount"
-          inputMode="decimal"
-          prefix="R$"
-          defaultValue={defaultInstallmentAmount}
-        />
+        <MoneyField label="Valor da parcela" name="installment_amount" defaultValue={defaultInstallmentAmount} />
         {state?.error && <p className="text-[14px] text-negative">{state.error}</p>}
         <Button type="submit" disabled={pending}>
           {pending ? "Salvando…" : "Salvar alterações"}

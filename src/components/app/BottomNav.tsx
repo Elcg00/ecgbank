@@ -3,7 +3,7 @@ import { Plus } from "lucide-react";
 import { mobileNav } from "@/lib/nav";
 import { NavLink } from "./NavLink";
 
-export function BottomNav() {
+export function BottomNav({ overdueBillsCount }: { overdueBillsCount?: number }) {
   return (
     <nav className="fixed inset-x-0 bottom-0 z-40 flex items-end border-t border-divider bg-surface px-2 pb-[env(safe-area-inset-bottom)] md:hidden">
       {mobileNav.map((item) =>
@@ -24,6 +24,7 @@ export function BottomNav() {
             label={item.label}
             icon={<item.icon size={22} strokeWidth={2.75} />}
             variant="bottom"
+            badge={item.href === "/mais" ? overdueBillsCount : undefined}
           />
         ),
       )}

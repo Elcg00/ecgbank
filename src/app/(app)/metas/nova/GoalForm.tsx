@@ -3,6 +3,7 @@
 import { useActionState } from "react";
 import { createGoal } from "../actions";
 import { Field } from "@/components/ui/Field";
+import { MoneyField } from "@/components/ui/MoneyField";
 import { Button } from "@/components/ui/Button";
 
 export function GoalForm({ defaultName }: { defaultName?: string }) {
@@ -17,8 +18,8 @@ export function GoalForm({ defaultName }: { defaultName?: string }) {
         placeholder="Reserva de emergência"
         defaultValue={defaultName}
       />
-      <Field label="Valor alvo" name="target" inputMode="decimal" prefix="R$" required placeholder="3.000" />
-      <Field label="Guardar por mês" name="monthly_target" inputMode="decimal" prefix="R$" placeholder="225" />
+      <MoneyField label="Valor alvo" name="target" required placeholder="3.000" />
+      <MoneyField label="Guardar por mês" name="monthly_target" placeholder="225" />
       <Field label="Prazo" name="deadline" type="date" />
       <label className="flex items-center gap-2 text-[14px] font-semibold text-ink">
         <input type="checkbox" name="shared" defaultChecked className="h-4 w-4 accent-accent-700" />

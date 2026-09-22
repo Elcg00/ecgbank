@@ -1,6 +1,6 @@
 import type { ButtonHTMLAttributes } from "react";
 
-type Variant = "primary" | "secondary" | "ghost";
+type Variant = "primary" | "secondary" | "ghost" | "danger";
 
 const base =
   "inline-flex items-center justify-center gap-2 rounded-full font-semibold text-[15px] transition-colors disabled:opacity-50 disabled:pointer-events-none px-6 py-3";
@@ -10,6 +10,7 @@ const variants: Record<Variant, string> = {
   secondary:
     "bg-transparent border border-divider text-ink hover:bg-surface-2",
   ghost: "bg-transparent text-accent-ink hover:underline px-0 py-0",
+  danger: "bg-negative text-white hover:opacity-90",
 };
 
 export function Button({

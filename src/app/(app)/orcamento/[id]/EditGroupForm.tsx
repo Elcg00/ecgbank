@@ -3,6 +3,7 @@
 import { useActionState } from "react";
 import { updateGroup, deleteGroup } from "../actions";
 import { Field } from "@/components/ui/Field";
+import { MoneyField } from "@/components/ui/MoneyField";
 import { Button } from "@/components/ui/Button";
 import { ConfirmForm } from "@/components/ui/ConfirmForm";
 
@@ -22,7 +23,7 @@ export function EditGroupForm({
       <form action={formAction} className="flex flex-col gap-4">
         <input type="hidden" name="group_id" value={groupId} />
         <Field label="Nome" name="name" defaultValue={name} required />
-        <Field label="Limite mensal" name="limit" inputMode="decimal" prefix="R$" defaultValue={defaultLimit} placeholder="0" />
+        <MoneyField label="Limite mensal" name="limit" defaultValue={defaultLimit} placeholder="0" />
         {state?.error && <p className="text-[14px] text-negative">{state.error}</p>}
         <Button type="submit" disabled={pending}>
           {pending ? "Salvando…" : "Salvar alterações"}

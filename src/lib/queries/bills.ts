@@ -7,6 +7,18 @@ function addMonths(dateStr: string, months: number): string {
   return d.toISOString().slice(0, 10);
 }
 
+/** Number of unpaid bills past their due date — surfaced as a nav badge. */
+export async function getOverdueBillsCount(supabase: SupabaseClient, familyId: string): Promise<number> {
+  const { count } = await supabase
+    .from("bills")
+    .select("id", { count: "exact", head: true })
+    .eq("family_id", familyId)
+    .eq("paid", false)
+    .lt("due_date", new Date().toISOString().slice(0, 10));
+
+  return count ?? 0;
+}
+
 /**
  * A recurring bill that was paid and whose due date has passed is rolled
  * forward to its next monthly occurrence (unpaid) so the user doesn't have

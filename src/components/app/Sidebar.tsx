@@ -8,10 +8,12 @@ export function Sidebar({
   familyName,
   memberName,
   avatarColor,
+  overdueBillsCount,
 }: {
   familyName: string;
   memberName: string;
   avatarColor?: string;
+  overdueBillsCount?: number;
 }) {
   return (
     <aside className="fixed inset-y-0 left-0 hidden w-[248px] flex-col border-r border-divider bg-surface px-4 py-6 md:flex">
@@ -31,6 +33,7 @@ export function Sidebar({
             label={item.label}
             icon={<item.icon size={18} strokeWidth={2.75} />}
             variant="sidebar"
+            badge={item.href === "/contas" ? overdueBillsCount : undefined}
           />
         ))}
       </nav>

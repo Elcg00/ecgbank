@@ -3,6 +3,7 @@
 import { useActionState, useState } from "react";
 import { updateTransaction, deleteTransaction } from "../actions";
 import { Field } from "@/components/ui/Field";
+import { MoneyField } from "@/components/ui/MoneyField";
 import { Button } from "@/components/ui/Button";
 import { ConfirmForm } from "@/components/ui/ConfirmForm";
 import { SelectableChip } from "@/components/ui/SelectableChip";
@@ -59,7 +60,7 @@ export function EditTransactionForm({
             />
           </div>
         </div>
-        <Field label="Valor" name="amount" inputMode="decimal" prefix="R$" defaultValue={defaultAmount} required />
+        <MoneyField label="Valor" name="amount" defaultValue={defaultAmount} required />
         {type === "saida" && groups.length > 0 && (
           <div>
             <p className="mb-2 text-[13px] font-semibold text-ink-muted">Categoria</p>

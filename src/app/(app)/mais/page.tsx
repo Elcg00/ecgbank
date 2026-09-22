@@ -3,9 +3,12 @@ import { ChevronRight } from "lucide-react";
 import { maisMenu } from "@/lib/nav";
 import { PageHeader } from "@/components/app/PageHeader";
 import { getSessionContext } from "@/lib/session";
+import { getOverdueBillsCount } from "@/lib/queries/bills";
+import { CountBadge } from "@/components/ui/CountBadge";
 
 export default async function MaisPage() {
-  const { profile } = await getSessionContext();
+  const { supabase, profile } = await getSessionContext();
+  const overdueBillsCount = await getOverdueBillsCount(supabase, profile.family_id);
 
   return (
     <div>
@@ -21,6 +24,9 @@ export default async function MaisPage() {
           >
             <item.icon size={20} strokeWidth={2.75} className="text-accent-ink" />
             <span className="flex-1 font-semibold">{item.label}</span>
+            {item.href === "/contas" && (
+              <CountBadge count={overdueBillsCount} className="h-5 min-w-5 px-1.5 text-[11px]" />
+            )}
             <ChevronRight size={18} className="text-ink-muted" />
           </Link>
         ))}
