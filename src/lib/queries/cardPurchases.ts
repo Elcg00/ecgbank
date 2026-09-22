@@ -4,8 +4,10 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 /**
  * Installments advance lazily on page view, same pattern as
  * rollRecurringBills: no cron job, just catch the row up whenever anyone
- * looks at it. installment_start (fixed at creation) plus months elapsed
- * since created_at tells us where installment_current should be now.
+ * looks at it. installment_start plus months elapsed since
+ * installment_anchor_at tells us where installment_current should be now.
+ * The anchor (unlike created_at) is reset whenever a purchase is edited, so
+ * editing installment_current/installment_total never throws this off.
  *
  * Each newly-due installment also books a fresh saída transaction — a
  * R$2.500 purchase in 10x should only ever hit a given month's balance for
@@ -18,7 +20,7 @@ export async function rollCardInstallments(supabase: SupabaseClient, cardIds: st
   const { data: purchases } = await supabase
     .from("credit_card_purchases")
     .select(
-      "id, name, amount_cents, created_at, installment_start, installment_total, installment_current, user_id, credit_cards(family_id)",
+      "id, name, amount_cents, installment_anchor_at, installment_start, installment_total, installment_current, user_id, budget_group_id, credit_cards(family_id)",
     )
     .in("card_id", cardIds);
 
@@ -29,9 +31,9 @@ export async function rollCardInstallments(supabase: SupabaseClient, cardIds: st
 
   await Promise.all(
     purchases.map(async (p) => {
-      const created = new Date(p.created_at);
+      const anchor = new Date(p.installment_anchor_at);
       const monthsElapsed =
-        (today.getFullYear() - created.getFullYear()) * 12 + (today.getMonth() - created.getMonth());
+        (today.getFullYear() - anchor.getFullYear()) * 12 + (today.getMonth() - anchor.getMonth());
       const expected = Math.min(p.installment_total, p.installment_start + Math.max(0, monthsElapsed));
 
       if (expected <= p.installment_current) return;
@@ -54,6 +56,7 @@ export async function rollCardInstallments(supabase: SupabaseClient, cardIds: st
           type: "saida",
           amount_cents: p.amount_cents * elapsedInstallments,
           payment_method: "credito",
+          budget_group_id: p.budget_group_id,
           occurred_at: todayIso,
           note: p.name,
         })

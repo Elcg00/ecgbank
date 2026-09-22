@@ -122,9 +122,11 @@ export type Database = {
       credit_card_purchases: {
         Row: {
           amount_cents: number
+          budget_group_id: string | null
           card_id: string
           created_at: string
           id: string
+          installment_anchor_at: string
           installment_current: number
           installment_start: number
           installment_total: number
@@ -134,9 +136,11 @@ export type Database = {
         }
         Insert: {
           amount_cents: number
+          budget_group_id?: string | null
           card_id: string
           created_at?: string
           id?: string
+          installment_anchor_at?: string
           installment_current?: number
           installment_start?: number
           installment_total?: number
@@ -146,9 +150,11 @@ export type Database = {
         }
         Update: {
           amount_cents?: number
+          budget_group_id?: string | null
           card_id?: string
           created_at?: string
           id?: string
+          installment_anchor_at?: string
           installment_current?: number
           installment_start?: number
           installment_total?: number
@@ -157,6 +163,13 @@ export type Database = {
           user_id?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "credit_card_purchases_budget_group_id_fkey"
+            columns: ["budget_group_id"]
+            isOneToOne: false
+            referencedRelation: "budget_groups"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "credit_card_purchases_card_id_fkey"
             columns: ["card_id"]
@@ -594,7 +607,7 @@ export type Database = {
 
 type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
 
-type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
+type DefaultSchema = DatabaseWithoutInternals["public"]
 
 export type Tables<
   DefaultSchemaTableNameOrOptions extends
