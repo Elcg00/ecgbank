@@ -99,6 +99,14 @@ export async function registerDebtPayment(formData: FormData) {
       .from("debts")
       .update({ remaining_cents: Math.max(0, debt.remaining_cents - paymentCents) })
       .eq("id", debtId);
+
+    await supabase.from("transactions").insert({
+      family_id: profile.family_id,
+      user_id: profile.id,
+      type: "saida",
+      amount_cents: paymentCents,
+      occurred_at: new Date().toISOString().slice(0, 10),
+    });
   }
 
   redirectWithToast("/dividas", "Pagamento registrado!");

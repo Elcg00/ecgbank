@@ -126,8 +126,10 @@ export type Database = {
           created_at: string
           id: string
           installment_current: number
+          installment_start: number
           installment_total: number
           name: string
+          transaction_id: string | null
         }
         Insert: {
           amount_cents: number
@@ -135,8 +137,10 @@ export type Database = {
           created_at?: string
           id?: string
           installment_current?: number
+          installment_start?: number
           installment_total?: number
           name: string
+          transaction_id?: string | null
         }
         Update: {
           amount_cents?: number
@@ -144,8 +148,10 @@ export type Database = {
           created_at?: string
           id?: string
           installment_current?: number
+          installment_start?: number
           installment_total?: number
           name?: string
+          transaction_id?: string | null
         }
         Relationships: [
           {
@@ -153,6 +159,13 @@ export type Database = {
             columns: ["card_id"]
             isOneToOne: false
             referencedRelation: "credit_cards"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "credit_card_purchases_transaction_id_fkey"
+            columns: ["transaction_id"]
+            isOneToOne: false
+            referencedRelation: "transactions"
             referencedColumns: ["id"]
           },
         ]
@@ -479,6 +492,7 @@ export type Database = {
           id: string
           income_source: string | null
           installments: number
+          note: string | null
           occurred_at: string
           payment_method: string | null
           recurring: boolean
@@ -493,6 +507,7 @@ export type Database = {
           id?: string
           income_source?: string | null
           installments?: number
+          note?: string | null
           occurred_at?: string
           payment_method?: string | null
           recurring?: boolean
@@ -507,6 +522,7 @@ export type Database = {
           id?: string
           income_source?: string | null
           installments?: number
+          note?: string | null
           occurred_at?: string
           payment_method?: string | null
           recurring?: boolean

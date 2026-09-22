@@ -8,6 +8,7 @@ import { ProgressBar } from "@/components/ui/ProgressBar";
 import { Button } from "@/components/ui/Button";
 import { ConfirmForm } from "@/components/ui/ConfirmForm";
 import { formatCents, nextDayOfMonthLabel } from "@/lib/format";
+import { rollCardInstallments } from "@/lib/queries/cardPurchases";
 import { deletePurchase } from "./actions";
 import { PurchaseForm } from "./PurchaseForm";
 
@@ -31,13 +32,13 @@ export default async function CartaoPage() {
     );
   }
 
+  const cardIds = cards.map((c) => c.id);
+  await rollCardInstallments(supabase, cardIds);
+
   const { data: purchases } = await supabase
     .from("credit_card_purchases")
     .select("id, card_id, name, amount_cents, installment_current, installment_total")
-    .in(
-      "card_id",
-      cards.map((c) => c.id),
-    )
+    .in("card_id", cardIds)
     .order("created_at");
 
   return (
