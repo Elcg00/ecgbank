@@ -61,7 +61,7 @@ export async function createPurchase(_prev: FormState, formData: FormData): Prom
 
   const cardId = String(formData.get("card_id"));
   const name = String(formData.get("name") || "").trim();
-  const amountCents = parseMoneyToCents(formData.get("amount"));
+  const totalCents = parseMoneyToCents(formData.get("amount"));
   const installmentCurrent = Number(formData.get("installment_current") || 1);
   const installmentTotal = Number(formData.get("installment_total") || 1);
 
@@ -72,21 +72,22 @@ export async function createPurchase(_prev: FormState, formData: FormData): Prom
     .eq("family_id", profile.family_id)
     .maybeSingle();
 
-  if (!name || amountCents <= 0 || !card) {
+  if (!name || totalCents <= 0 || !card) {
     return { error: "Preencha os dados da compra." };
   }
 
-  // amount_cents here is the per-installment value (that's what the form
-  // asks for, and what the card's "used limit" bar multiplies by the
-  // remaining installments) — the transaction ledger needs the full
-  // commitment, same as an installment purchase logged via Lançar.
+  // The form asks for the purchase's total price; only one installment's
+  // worth should hit this month's balance, and the rest lands one at a
+  // time as rollCardInstallments advances installment_current each month.
+  const installmentAmountCents = Math.round(totalCents / installmentTotal);
+
   const { data: transaction, error: transactionError } = await supabase
     .from("transactions")
     .insert({
       family_id: profile.family_id,
       user_id: profile.id,
       type: "saida",
-      amount_cents: amountCents * installmentTotal,
+      amount_cents: installmentAmountCents,
       payment_method: "credito",
       installments: installmentTotal,
       occurred_at: new Date().toISOString().slice(0, 10),
@@ -101,8 +102,9 @@ export async function createPurchase(_prev: FormState, formData: FormData): Prom
 
   const { error } = await supabase.from("credit_card_purchases").insert({
     card_id: cardId,
+    user_id: profile.id,
     name,
-    amount_cents: amountCents,
+    amount_cents: installmentAmountCents,
     installment_current: installmentCurrent,
     installment_start: installmentCurrent,
     installment_total: installmentTotal,
