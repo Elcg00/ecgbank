@@ -3,10 +3,9 @@ import { PageHeader } from "@/components/app/PageHeader";
 import { getSessionContext } from "@/lib/session";
 import { Card } from "@/components/ui/Card";
 import { Monogram } from "@/components/ui/Monogram";
-import { Field } from "@/components/ui/Field";
-import { Button } from "@/components/ui/Button";
 import { ConfirmForm } from "@/components/ui/ConfirmForm";
-import { inviteMember, revokeInvite, removeMember, toggleMemberRole, toggleMemberActive } from "./actions";
+import { revokeInvite, removeMember, toggleMemberRole, toggleMemberActive } from "./actions";
+import { InviteMemberForm } from "./InviteMemberForm";
 
 export default async function FamiliaPage() {
   const { supabase, profile } = await getSessionContext();
@@ -97,10 +96,7 @@ export default async function FamiliaPage() {
 
       <Card className="mb-4">
         <h5 className="mb-3">Convidar alguém</h5>
-        <form action={inviteMember} className="flex items-end gap-2">
-          <Field label="E-mail" name="email" type="email" required placeholder="mae@email.com" />
-          <Button type="submit">+ Convidar</Button>
-        </form>
+        <InviteMemberForm />
       </Card>
 
       <p className="text-[13px] text-ink-muted">

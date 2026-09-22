@@ -3,9 +3,11 @@
 import { getSessionContext } from "@/lib/session";
 import { redirectWithToast } from "@/lib/toast";
 
+type FormState = { error?: string } | undefined;
+
 const INCOME_SOURCES = ["salario", "extra", "reembolso", "outro"];
 
-export async function createTransaction(formData: FormData) {
+export async function createTransaction(_prev: FormState, formData: FormData): Promise<FormState> {
   const { supabase, profile } = await getSessionContext();
 
   const type = String(formData.get("type") || "saida");
@@ -20,10 +22,10 @@ export async function createTransaction(formData: FormData) {
   const note = String(formData.get("note") || "").trim() || null;
 
   if (amountCents <= 0) {
-    throw new Error("Informe um valor maior que zero.");
+    return { error: "Informe um valor maior que zero." };
   }
 
-  await supabase.from("transactions").insert({
+  const { error } = await supabase.from("transactions").insert({
     family_id: profile.family_id,
     user_id: memberId,
     type,
@@ -35,6 +37,8 @@ export async function createTransaction(formData: FormData) {
     recurring,
     note,
   });
+
+  if (error) return { error: "Não foi possível salvar. Tente novamente." };
 
   redirectWithToast("/", "Lançamento salvo!");
 }

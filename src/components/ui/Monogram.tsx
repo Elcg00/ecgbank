@@ -1,8 +1,8 @@
 const PALETTE = [
   "bg-accent-200 text-accent-800",
   "bg-accent2-200 text-accent2-800",
-  "bg-[#fbe6e0] text-negative",
-  "bg-[#fbedd2] text-warning",
+  "bg-negative-bg text-negative",
+  "bg-warning-bg text-warning",
 ];
 
 function hash(input: string): number {

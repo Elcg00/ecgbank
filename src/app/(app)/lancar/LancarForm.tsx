@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useActionState, useMemo, useState } from "react";
 import { Delete } from "lucide-react";
 import { createTransaction } from "./actions";
 import { Monogram } from "@/components/ui/Monogram";
@@ -31,6 +31,7 @@ function formatCentsDisplay(cents: number) {
 }
 
 export function LancarForm({ categories, members }: { categories: Category[]; members: Member[] }) {
+  const [state, formAction, pending] = useActionState(createTransaction, undefined);
   const [type, setType] = useState<"entrada" | "saida">("saida");
   const [cents, setCents] = useState(0);
   const [categoryId, setCategoryId] = useState<string | null>(null);
@@ -39,7 +40,6 @@ export function LancarForm({ categories, members }: { categories: Category[]; me
   const [installments, setInstallments] = useState(1);
   const [memberId, setMemberId] = useState<string>(members[0]?.id ?? "");
   const [recurring, setRecurring] = useState(false);
-  const [pending, setPending] = useState(false);
 
   const installmentOptions = useMemo(() => Array.from({ length: 12 }, (_, i) => i + 1), []);
 
@@ -53,11 +53,7 @@ export function LancarForm({ categories, members }: { categories: Category[]; me
   }
 
   return (
-    <form
-      action={createTransaction}
-      onSubmit={() => setPending(true)}
-      className="flex flex-col gap-6"
-    >
+    <form action={formAction} className="flex flex-col gap-6">
       <input type="hidden" name="amount_cents" value={cents} />
       <input type="hidden" name="type" value={type} />
       <input type="hidden" name="budget_group_id" value={categoryId ?? ""} />
@@ -230,6 +226,8 @@ export function LancarForm({ categories, members }: { categories: Category[]; me
           <span className="absolute left-1 h-4 w-4 rounded-full bg-white transition-transform peer-checked:translate-x-5" />
         </span>
       </label>
+
+      {state?.error && <p className="text-[14px] text-negative">{state.error}</p>}
 
       <Button type="submit" disabled={cents <= 0 || pending} className="w-full">
         {pending ? "Salvando…" : "Salvar lançamento"}

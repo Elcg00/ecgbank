@@ -3,12 +3,14 @@
 import { getSessionContext } from "@/lib/session";
 import { redirectWithToast, redirectWithError } from "@/lib/toast";
 
-export async function inviteMember(formData: FormData) {
+type FormState = { error?: string } | undefined;
+
+export async function inviteMember(_prev: FormState, formData: FormData): Promise<FormState> {
   const { supabase, profile } = await getSessionContext();
   const email = String(formData.get("email") || "").trim();
 
   if (!email) {
-    redirectWithError("/familia", "Informe um e-mail para convidar.");
+    return { error: "Informe um e-mail para convidar." };
   }
 
   const { error } = await supabase.from("family_invites").insert({
@@ -17,7 +19,7 @@ export async function inviteMember(formData: FormData) {
     invited_by: profile.id,
   });
 
-  if (error) redirectWithError("/familia", "Não foi possível enviar o convite.");
+  if (error) return { error: "Não foi possível enviar o convite." };
 
   redirectWithToast("/familia", "Convite enviado!");
 }
