@@ -1,0 +1,15 @@
+create index if not exists bills_budget_group_id_idx on bills (budget_group_id);
+create index if not exists bills_family_id_idx on bills (family_id);
+create index if not exists bills_transaction_id_idx on bills (transaction_id);
+create index if not exists budget_groups_family_id_idx on budget_groups (family_id);
+create index if not exists credit_card_purchases_card_id_idx on credit_card_purchases (card_id);
+create index if not exists credit_card_purchases_transaction_id_idx on credit_card_purchases (transaction_id);
+create index if not exists credit_cards_family_id_idx on credit_cards (family_id);
+create index if not exists debts_family_id_idx on debts (family_id);
+create index if not exists family_invites_family_id_idx on family_invites (family_id);
+create index if not exists family_invites_invited_by_idx on family_invites (invited_by);
+create index if not exists goal_contributions_user_id_idx on goal_contributions (user_id);
+create index if not exists goals_family_id_idx on goals (family_id);
+create index if not exists profiles_family_id_idx on profiles (family_id);
+create index if not exists transactions_budget_group_id_idx on transactions (budget_group_id);
+create index if not exists transactions_user_id_idx on transactions (user_id);
