@@ -1,6 +1,7 @@
 import "server-only";
 
 export type ExtratoFilters = {
+  q: string | null;
   group: string | null;
   member: string | null;
   type: "entrada" | "saida" | null;
@@ -15,6 +16,7 @@ export function parseExtratoFilters(searchParams: RawSearchParams): ExtratoFilte
   const type = one(searchParams.type);
 
   return {
+    q: one(searchParams.q),
     group: one(searchParams.group),
     member: one(searchParams.member),
     type: type === "entrada" || type === "saida" ? type : null,
@@ -24,5 +26,5 @@ export function parseExtratoFilters(searchParams: RawSearchParams): ExtratoFilte
 }
 
 export function hasActiveFilters(filters: ExtratoFilters): boolean {
-  return Boolean(filters.group || filters.member || filters.type || filters.from || filters.to);
+  return Boolean(filters.q || filters.group || filters.member || filters.type || filters.from || filters.to);
 }

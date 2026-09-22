@@ -29,10 +29,11 @@ export async function GET(request: NextRequest) {
   let query = supabase
     .from("transactions")
     .select(
-      "type, amount_cents, occurred_at, payment_method, income_source, budget_groups(name), profiles(full_name)",
+      "type, amount_cents, occurred_at, payment_method, income_source, note, budget_groups(name), profiles(full_name)",
     )
     .eq("family_id", profile.family_id);
 
+  if (filters.q) query = query.ilike("note", `%${filters.q}%`);
   if (filters.group) query = query.eq("budget_group_id", filters.group);
   if (filters.member) query = query.eq("user_id", filters.member);
   if (filters.type) query = query.eq("type", filters.type);
@@ -44,7 +45,7 @@ export async function GET(request: NextRequest) {
     .order("created_at", { ascending: false })
     .limit(5000);
 
-  const header = ["Data", "Tipo", "Categoria", "Membro", "Forma de pagamento", "Valor"];
+  const header = ["Data", "Tipo", "Categoria", "Nota", "Membro", "Forma de pagamento", "Valor"];
   const lines = [header.map(csvField).join(";")];
 
   for (const t of transactions ?? []) {
@@ -55,7 +56,7 @@ export async function GET(request: NextRequest) {
     const amount = (t.type === "entrada" ? "" : "-") + centsToInputValue(t.amount_cents);
 
     lines.push(
-      [t.occurred_at, t.type === "entrada" ? "Entrada" : "Saída", category, member, payment, amount]
+      [t.occurred_at, t.type === "entrada" ? "Entrada" : "Saída", category, t.note ?? "", member, payment, amount]
         .map(csvField)
         .join(";"),
     );

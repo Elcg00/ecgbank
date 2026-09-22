@@ -5,12 +5,18 @@ import { createGoal } from "../actions";
 import { Field } from "@/components/ui/Field";
 import { Button } from "@/components/ui/Button";
 
-export function GoalForm() {
+export function GoalForm({ defaultName }: { defaultName?: string }) {
   const [state, formAction, pending] = useActionState(createGoal, undefined);
 
   return (
     <form action={formAction} className="flex flex-col gap-4">
-      <Field label="Nome da meta" name="name" required placeholder="Reserva de emergência" />
+      <Field
+        label="Nome da meta"
+        name="name"
+        required
+        placeholder="Reserva de emergência"
+        defaultValue={defaultName}
+      />
       <Field label="Valor alvo" name="target" inputMode="decimal" prefix="R$" required placeholder="3.000" />
       <Field label="Guardar por mês" name="monthly_target" inputMode="decimal" prefix="R$" placeholder="225" />
       <Field label="Prazo" name="deadline" type="date" />

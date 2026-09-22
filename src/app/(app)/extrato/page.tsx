@@ -39,10 +39,11 @@ export default async function ExtratoPage({
   let query = supabase
     .from("transactions")
     .select(
-      "id, type, amount_cents, occurred_at, payment_method, income_source, budget_groups(name), profiles(full_name)",
+      "id, type, amount_cents, occurred_at, payment_method, income_source, note, budget_groups(name), profiles(full_name)",
     )
     .eq("family_id", profile.family_id);
 
+  if (filters.q) query = query.ilike("note", `%${filters.q}%`);
   if (filters.group) query = query.eq("budget_group_id", filters.group);
   if (filters.member) query = query.eq("user_id", filters.member);
   if (filters.type) query = query.eq("type", filters.type);
@@ -64,49 +65,61 @@ export default async function ExtratoPage({
       <PageHeader title="Extrato" name={profile.full_name} avatarColor={profile.avatar_color} />
 
       <Card className="mb-4">
-        <form className="grid grid-cols-2 gap-3 md:grid-cols-4" method="get">
-          <Select label="Categoria" name="group" defaultValue={filters.group ?? ""}>
-            <option value="">Todas</option>
-            {(groups ?? []).map((g) => (
-              <option key={g.id} value={g.id}>
-                {g.name}
-              </option>
-            ))}
-          </Select>
-          <Select label="Membro" name="member" defaultValue={filters.member ?? ""}>
-            <option value="">Todos</option>
-            {(members ?? []).map((m) => (
-              <option key={m.id} value={m.id}>
-                {m.id === profile.id ? "Você" : m.full_name || "Membro"}
-              </option>
-            ))}
-          </Select>
-          <Select label="Tipo" name="type" defaultValue={filters.type ?? ""}>
-            <option value="">Todos</option>
-            <option value="entrada">Entrada</option>
-            <option value="saida">Saída</option>
-          </Select>
-          <div className="grid grid-cols-2 gap-2">
-            <label className="block">
-              <span className="mb-1.5 block text-[13px] font-semibold text-ink-muted">De</span>
-              <input
-                type="date"
-                name="from"
-                defaultValue={filters.from ?? ""}
-                className="w-full rounded-full border border-divider bg-app px-3 py-3 text-[14px] text-ink outline-none focus:border-accent-700"
-              />
-            </label>
-            <label className="block">
-              <span className="mb-1.5 block text-[13px] font-semibold text-ink-muted">Até</span>
-              <input
-                type="date"
-                name="to"
-                defaultValue={filters.to ?? ""}
-                className="w-full rounded-full border border-divider bg-app px-3 py-3 text-[14px] text-ink outline-none focus:border-accent-700"
-              />
-            </label>
+        <form className="flex flex-col gap-3" method="get">
+          <label className="block">
+            <span className="mb-1.5 block text-[13px] font-semibold text-ink-muted">Buscar por nota</span>
+            <input
+              type="text"
+              name="q"
+              defaultValue={filters.q ?? ""}
+              placeholder="Ex: aniversário da Maria"
+              className="w-full rounded-full border border-divider bg-app px-4 py-3 text-[15px] text-ink outline-none placeholder:text-ink-muted focus:border-accent-700"
+            />
+          </label>
+          <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+            <Select label="Categoria" name="group" defaultValue={filters.group ?? ""}>
+              <option value="">Todas</option>
+              {(groups ?? []).map((g) => (
+                <option key={g.id} value={g.id}>
+                  {g.name}
+                </option>
+              ))}
+            </Select>
+            <Select label="Membro" name="member" defaultValue={filters.member ?? ""}>
+              <option value="">Todos</option>
+              {(members ?? []).map((m) => (
+                <option key={m.id} value={m.id}>
+                  {m.id === profile.id ? "Você" : m.full_name || "Membro"}
+                </option>
+              ))}
+            </Select>
+            <Select label="Tipo" name="type" defaultValue={filters.type ?? ""}>
+              <option value="">Todos</option>
+              <option value="entrada">Entrada</option>
+              <option value="saida">Saída</option>
+            </Select>
+            <div className="grid grid-cols-2 gap-2">
+              <label className="block">
+                <span className="mb-1.5 block text-[13px] font-semibold text-ink-muted">De</span>
+                <input
+                  type="date"
+                  name="from"
+                  defaultValue={filters.from ?? ""}
+                  className="w-full rounded-full border border-divider bg-app px-3 py-3 text-[14px] text-ink outline-none focus:border-accent-700"
+                />
+              </label>
+              <label className="block">
+                <span className="mb-1.5 block text-[13px] font-semibold text-ink-muted">Até</span>
+                <input
+                  type="date"
+                  name="to"
+                  defaultValue={filters.to ?? ""}
+                  className="w-full rounded-full border border-divider bg-app px-3 py-3 text-[14px] text-ink outline-none focus:border-accent-700"
+                />
+              </label>
+            </div>
           </div>
-          <div className="col-span-2 flex items-center gap-3 md:col-span-4">
+          <div className="flex items-center gap-3">
             <Button type="submit" className="flex-1 md:flex-none">
               Filtrar
             </Button>
@@ -131,8 +144,13 @@ export default async function ExtratoPage({
             const group = (t.budget_groups as unknown as { name: string } | null)?.name;
             const member = (t.profiles as unknown as { full_name: string } | null)?.full_name;
             const income = INCOME_SOURCE_LABEL[t.income_source ?? ""];
-            const title = t.type === "entrada" ? income ?? "Entrada" : group ?? "Sem categoria";
-            const sub = [t.type === "saida" ? PAYMENT_LABEL[t.payment_method ?? ""] : null, member]
+            const categoryLabel = t.type === "entrada" ? income ?? "Entrada" : group ?? "Sem categoria";
+            const title = t.note || categoryLabel;
+            const sub = [
+              t.note ? categoryLabel : null,
+              t.type === "saida" ? PAYMENT_LABEL[t.payment_method ?? ""] : null,
+              member,
+            ]
               .filter(Boolean)
               .join(" · ");
             return (

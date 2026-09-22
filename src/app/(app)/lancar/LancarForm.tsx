@@ -5,6 +5,7 @@ import { Delete } from "lucide-react";
 import { createTransaction } from "./actions";
 import { Monogram } from "@/components/ui/Monogram";
 import { Button } from "@/components/ui/Button";
+import { Field } from "@/components/ui/Field";
 
 type Category = { id: string; name: string };
 type Member = { id: string; name: string };
@@ -212,6 +213,8 @@ export function LancarForm({ categories, members }: { categories: Category[]; me
           </div>
         </div>
       )}
+
+      <Field label="Nota (opcional)" name="note" placeholder="Ex: aniversário da Maria" />
 
       <label className="flex items-center justify-between rounded-2xl bg-surface px-4 py-3">
         <span className="font-semibold text-ink">Conta recorrente</span>

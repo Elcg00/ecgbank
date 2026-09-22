@@ -20,6 +20,7 @@ type Transaction = {
   amount_cents: number;
   budget_group_id: string | null;
   income_source: string | null;
+  note: string | null;
   occurred_at: string;
 };
 
@@ -93,6 +94,7 @@ export function EditTransactionForm({
             </div>
           </div>
         )}
+        <Field label="Nota (opcional)" name="note" defaultValue={transaction.note ?? ""} placeholder="Ex: aniversário da Maria" />
         <Field label="Data" name="occurred_at" type="date" defaultValue={transaction.occurred_at} />
         {state?.error && <p className="text-[14px] text-negative">{state.error}</p>}
         <Button type="submit" disabled={pending}>

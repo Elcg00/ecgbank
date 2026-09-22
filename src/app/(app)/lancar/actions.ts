@@ -17,6 +17,7 @@ export async function createTransaction(formData: FormData) {
   const installments = Number(formData.get("installments") || 1);
   const memberId = String(formData.get("member_id") || profile.id);
   const recurring = formData.get("recurring") === "on";
+  const note = String(formData.get("note") || "").trim() || null;
 
   if (amountCents <= 0) {
     throw new Error("Informe um valor maior que zero.");
@@ -32,6 +33,7 @@ export async function createTransaction(formData: FormData) {
     payment_method: paymentMethod,
     installments: paymentMethod === "credito" ? installments : 1,
     recurring,
+    note,
   });
 
   redirectWithToast("/", "Lançamento salvo!");

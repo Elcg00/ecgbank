@@ -11,7 +11,7 @@ export default async function EditTransactionPage({ params }: { params: Promise<
   const [{ data: transaction }, { data: groups }] = await Promise.all([
     supabase
       .from("transactions")
-      .select("id, type, amount_cents, budget_group_id, income_source, occurred_at")
+      .select("id, type, amount_cents, budget_group_id, income_source, note, occurred_at")
       .eq("id", id)
       .eq("family_id", profile.family_id)
       .maybeSingle(),
