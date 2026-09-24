@@ -32,7 +32,7 @@ export function EditCardForm({ card, defaultLimit }: { card: Card; defaultLimit:
         className="mt-4"
       >
         <input type="hidden" name="card_id" value={card.id} />
-        <Button type="submit" variant="secondary" className="w-full text-negative">
+        <Button type="submit" variant="danger" className="w-full">
           Excluir cartão
         </Button>
       </ConfirmForm>

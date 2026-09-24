@@ -41,9 +41,9 @@ function ToastInner() {
         }`}
       >
         {toastState.isError ? (
-          <AlertCircle size={18} strokeWidth={2.75} className="shrink-0" />
+          <AlertCircle size={18} strokeWidth={2.25} className="shrink-0" />
         ) : (
-          <CheckCircle2 size={18} strokeWidth={2.75} className="shrink-0" />
+          <CheckCircle2 size={18} strokeWidth={2.25} className="shrink-0" />
         )}
         {toastState.message}
         <button
@@ -52,7 +52,7 @@ function ToastInner() {
           aria-label="Fechar"
           className="ml-1 shrink-0 opacity-80 hover:opacity-100"
         >
-          <X size={16} strokeWidth={2.75} />
+          <X size={16} strokeWidth={2.25} />
         </button>
       </div>
     </div>

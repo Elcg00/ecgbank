@@ -49,7 +49,7 @@ export default async function CardDetailPage({ params }: { params: Promise<{ id:
           href={`/cartao/${card.id}/editar`}
           className="inline-flex items-center gap-1.5 rounded-full border border-divider px-4 py-2 text-[14px] font-semibold text-ink hover:bg-surface-2"
         >
-          <Pencil size={15} strokeWidth={2.75} /> Editar
+          <Pencil size={15} strokeWidth={2.25} /> Editar
         </Link>
       </div>
 
@@ -57,9 +57,9 @@ export default async function CardDetailPage({ params }: { params: Promise<{ id:
         <p className="text-[13px] text-ink-muted">
           Fatura atual · fecha {nextDayOfMonthLabel(card.closing_day)} · vence {nextDayOfMonthLabel(card.due_day)}
         </p>
-        <h2>{formatCents(invoiceCents)}</h2>
+        <h2 className="tabular-nums">{formatCents(invoiceCents)}</h2>
         <ProgressBar pct={usagePct} color={usagePct >= 80 ? "warning" : "accent"} />
-        <p className="text-[13px] text-ink-muted">
+        <p className="text-[13px] tabular-nums text-ink-muted">
           Usado {formatCents(usedCents)} de {formatCents(card.limit_cents)} ({usagePct}%)
         </p>
       </Card>
@@ -71,7 +71,7 @@ export default async function CardDetailPage({ params }: { params: Promise<{ id:
             href={`/cartao/${card.id}/nova-compra`}
             className="flex items-center gap-1 text-[13px] font-semibold text-accent-ink"
           >
-            <Plus size={14} strokeWidth={2.75} /> Nova compra
+            <Plus size={14} strokeWidth={2.25} /> Nova compra
           </Link>
         </div>
         <div className="divide-y divide-divider">
@@ -86,7 +86,7 @@ export default async function CardDetailPage({ params }: { params: Promise<{ id:
                   </p>
                 </div>
                 <div className="flex shrink-0 items-center gap-3">
-                  <span className="font-semibold text-ink">{formatCents(p.amount_cents)}</span>
+                  <span className="font-semibold tabular-nums text-ink">{formatCents(p.amount_cents)}</span>
                   <Link href={`/cartao/${card.id}/compra/${p.id}`} className="text-[12px] font-semibold text-accent-ink">
                     editar
                   </Link>

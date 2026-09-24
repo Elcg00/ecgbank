@@ -62,10 +62,10 @@ export default async function CartaoPage() {
                 </div>
                 <div>
                   <p className="text-[13px] text-ink-muted">Fatura atual</p>
-                  <h2>{formatCents(invoiceCents)}</h2>
+                  <h2 className="tabular-nums">{formatCents(invoiceCents)}</h2>
                 </div>
                 <ProgressBar pct={usagePct} color={usagePct >= 80 ? "warning" : "accent"} />
-                <p className="text-[13px] text-ink-muted">
+                <p className="text-[13px] tabular-nums text-ink-muted">
                   Usado {formatCents(usedCents)} de {formatCents(card.limit_cents)} ({usagePct}%) · vence{" "}
                   {nextDayOfMonthLabel(card.due_day)}
                 </p>
@@ -79,7 +79,7 @@ export default async function CartaoPage() {
         href="/cartao/novo"
         className="mt-6 inline-flex items-center gap-1 text-[14px] font-semibold text-accent-ink"
       >
-        <Plus size={16} strokeWidth={2.75} /> Adicionar outro cartão
+        <Plus size={16} strokeWidth={2.25} /> Adicionar outro cartão
       </Link>
     </div>
   );

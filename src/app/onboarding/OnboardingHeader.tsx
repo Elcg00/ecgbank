@@ -7,7 +7,7 @@ export function OnboardingHeader({ step }: { step: number }) {
     <div className="mb-8 flex items-center gap-3">
       {step > 1 ? (
         <Link href={`/onboarding/${step - 1}`} aria-label="Voltar" className="text-ink-muted">
-          <ChevronLeft size={22} strokeWidth={2.75} />
+          <ChevronLeft size={22} strokeWidth={2.25} />
         </Link>
       ) : (
         <span className="w-[22px]" />

@@ -42,13 +42,9 @@ export function NavLink({
     <Link
       href={href}
       className={`flex items-center gap-3 rounded-full px-4 py-2.5 text-[15px] font-semibold transition-colors ${
-        active ? "bg-surface-2 text-accent-ink" : "text-ink-muted hover:text-ink"
+        active ? "bg-white/12 text-white" : "text-[#CFE0D3] hover:text-white"
       }`}
     >
-      <span
-        className={`h-1.5 w-1.5 rounded-full ${active ? "bg-accent-700" : "bg-transparent"}`}
-        aria-hidden
-      />
       {icon}
       <span className="flex-1">{label}</span>
       <CountBadge count={badge ?? 0} className="h-5 min-w-5 px-1.5 text-[11px]" />

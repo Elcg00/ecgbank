@@ -58,7 +58,7 @@ export function EditBillForm({
 
       <ConfirmForm action={deleteBill} confirmMessage={`Excluir a conta "${bill.name}"?`} className="mt-4">
         <input type="hidden" name="bill_id" value={bill.id} />
-        <Button type="submit" variant="secondary" className="w-full text-negative">
+        <Button type="submit" variant="danger" className="w-full">
           Excluir conta
         </Button>
       </ConfirmForm>

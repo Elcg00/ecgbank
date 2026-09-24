@@ -132,7 +132,7 @@ export default async function ExtratoPage({
               href={`/extrato/export${exportQuery ? `?${exportQuery}` : ""}`}
               className="ml-auto inline-flex items-center gap-1.5 text-[14px] font-semibold text-accent-ink"
             >
-              <Download size={16} strokeWidth={2.75} /> Exportar CSV
+              <Download size={16} strokeWidth={2.25} /> Exportar CSV
             </Link>
           </div>
         </form>
@@ -164,7 +164,7 @@ export default async function ExtratoPage({
                   <p className="truncate text-[13px] text-ink-muted">{sub || "—"}</p>
                 </div>
                 <div className="flex shrink-0 flex-col items-end">
-                  <span className={`font-semibold ${t.type === "entrada" ? "text-positive" : "text-negative"}`}>
+                  <span className={`font-semibold tabular-nums ${t.type === "entrada" ? "text-positive" : "text-negative"}`}>
                     {t.type === "entrada" ? "+" : "-"}
                     {formatCents(t.amount_cents)}
                   </span>

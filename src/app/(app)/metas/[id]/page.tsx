@@ -26,7 +26,7 @@ export default async function GoalDetailPage({ params }: { params: Promise<{ id:
       <h1 className="mb-5">{goal.name}</h1>
       <Card className="mb-4 flex flex-col gap-3">
         <ProgressBar pct={pct} />
-        <p className="text-[14px] text-ink-muted">
+        <p className="text-[14px] tabular-nums text-ink-muted">
           {formatCents(goal.savedCents)} de {formatCents(goal.target_cents)}
           {goal.monthly_target_cents > 0 && ` · guarde ${formatCents(goal.monthly_target_cents)}/mês`}
           {months !== null && ` · ${months} ${months === 1 ? "mês" : "meses"} restantes`}
@@ -36,7 +36,7 @@ export default async function GoalDetailPage({ params }: { params: Promise<{ id:
             {goal.contributions.map((c) => (
               <span
                 key={c.userId}
-                className="rounded-full bg-surface-2 px-3 py-1 text-[12px] font-semibold text-ink-muted"
+                className="rounded-full bg-surface-2 px-3 py-1 text-[12px] font-semibold tabular-nums text-ink-muted"
               >
                 {c.name}: {formatCents(c.amountCents)}
               </span>

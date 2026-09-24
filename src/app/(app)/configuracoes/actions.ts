@@ -48,10 +48,13 @@ export async function updatePreferences(
 ) {
   const { supabase, profile } = await getSessionContext();
 
+  // accent_theme/heading_style no longer have a UI (the app has one fixed
+  // brand identity now) — keep whatever is already stored instead of
+  // resetting them to their defaults just because the form doesn't submit them.
   const prefs = normalizePreferences({
     theme_preference: String(formData.get("theme_preference") || ""),
-    accent_theme: String(formData.get("accent_theme") || ""),
-    heading_style: String(formData.get("heading_style") || ""),
+    accent_theme: profile.accent_theme,
+    heading_style: profile.heading_style,
   });
 
   const { error } = await supabase.from("profiles").update(prefs).eq("id", profile.id);

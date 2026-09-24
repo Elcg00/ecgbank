@@ -7,7 +7,7 @@ export function BackHeader({ href, label }: { href: string; label: string }) {
       href={href}
       className="mb-4 inline-flex items-center gap-1 text-[14px] font-semibold text-ink-muted"
     >
-      <ChevronLeft size={18} strokeWidth={2.75} />
+      <ChevronLeft size={18} strokeWidth={2.25} />
       {label}
     </Link>
   );

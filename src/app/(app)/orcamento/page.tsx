@@ -40,13 +40,13 @@ export default async function OrcamentoPage() {
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0">
               <p className="text-[13px] text-ink-muted">Renda familiar estimada</p>
-              <h4>{formatCents(familyIncomeCents)}/mês</h4>
+              <h4 className="tabular-nums">{formatCents(familyIncomeCents)}/mês</h4>
             </div>
             <Link
               href="/configuracoes"
               className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-divider px-3 py-1.5 text-[13px] font-semibold text-ink hover:bg-surface-2"
             >
-              <Pencil size={13} strokeWidth={2.75} /> Editar
+              <Pencil size={13} strokeWidth={2.25} /> Editar
             </Link>
           </div>
           {incomeBreakdown.length > 1 && (
@@ -54,7 +54,7 @@ export default async function OrcamentoPage() {
               {incomeBreakdown.map((m) => (
                 <div key={m.name} className="flex items-center justify-between gap-2 text-[13px] text-ink-muted">
                   <span className="min-w-0 truncate">{m.name}</span>
-                  <span className="shrink-0 font-semibold text-ink">{formatCents(m.cents)}</span>
+                  <span className="shrink-0 font-semibold tabular-nums text-ink">{formatCents(m.cents)}</span>
                 </div>
               ))}
             </div>
@@ -67,7 +67,7 @@ export default async function OrcamentoPage() {
 
       <div className="mb-4 flex justify-end">
         <Link href="/orcamento/nova" className="inline-flex items-center gap-1 text-[14px] font-semibold text-accent-ink">
-          <Plus size={16} strokeWidth={2.75} /> Novo grupo
+          <Plus size={16} strokeWidth={2.25} /> Novo grupo
         </Link>
       </div>
       <div className="flex flex-col gap-3 md:grid md:grid-cols-3 md:gap-4">

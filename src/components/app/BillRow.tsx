@@ -24,7 +24,7 @@ export function BillRow({ bill }: { bill: Bill }) {
         <p className="truncate text-[13px] text-ink-muted">{label}</p>
       </div>
       <div className="flex shrink-0 flex-col items-end gap-1">
-        <span className="font-semibold text-ink">{formatCents(bill.amount_cents)}</span>
+        <span className="font-semibold tabular-nums text-ink">{formatCents(bill.amount_cents)}</span>
         <StatusPill status={STATUS_PILL[status]}>{STATUS_LABEL[status]}</StatusPill>
       </div>
     </div>

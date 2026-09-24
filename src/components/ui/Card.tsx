@@ -7,7 +7,7 @@ export function Card({
 }: {
   children: ReactNode;
   className?: string;
-  tint?: "surface" | "surface-2" | "accent" | "accent2";
+  tint?: "surface" | "surface-2" | "accent" | "accent2" | "dark";
 }) {
   const bg =
     tint === "accent"
@@ -16,7 +16,9 @@ export function Card({
         ? "bg-accent2-100 dark:bg-accent2-900/40"
         : tint === "surface-2"
           ? "bg-surface-2"
-          : "bg-surface";
+          : tint === "dark"
+            ? "bg-accent-700 text-white"
+            : "bg-surface";
 
   return (
     <div className={`rounded-card ${bg} p-5 shadow-sm ${className}`}>{children}</div>

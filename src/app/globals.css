@@ -1,52 +1,58 @@
 @import "tailwindcss";
 
 :root {
-  --color-app: #f9f4ed;
-  --color-surface: #eef1f4;
-  --color-surface-2: #eee7db;
-  --color-ink: #201e1d;
-  --color-ink-muted: rgb(32 30 29 / 55%);
-  --color-divider: rgb(32 30 29 / 16%);
+  /* Floresta — nova identidade ECG Bank */
+  --color-app: #f5f8f4;
+  --color-surface: #ffffff;
+  --color-surface-2: #e9eee8;
+  --color-ink: #1b241e;
+  --color-ink-muted: #566459;
+  --color-divider: #dce5dd;
 
-  --color-accent-100: #e7f1ea;
-  --color-accent-200: #c9e0d0;
-  --color-accent-300: #a0c9ab;
-  --color-accent-400: #74ac82;
-  --color-accent-500: #4f8f5f;
-  --color-accent-600: #3c6e46;
-  --color-accent-700: #2d5535;
-  --color-accent-800: #213f27;
-  --color-accent-900: #152918;
+  --color-accent-100: #e9eee8;
+  --color-accent-200: #cfe0d3;
+  --color-accent-300: #a5c8b1;
+  --color-accent-400: #6fa383;
+  --color-accent-500: #3f7f5a;
+  --color-accent-600: #2c6445;
+  --color-accent-700: #173d2a;
+  --color-accent-800: #1f4f36;
+  --color-accent-900: #0f2a1c;
 
-  --color-accent2-100: #f0fae1;
-  --color-accent2-200: #e1eecc;
-  --color-accent2-300: #ccdbb2;
-  --color-accent2-400: #aebf92;
-  --color-accent2-500: #8fa073;
-  --color-accent2-600: #728157;
-  --color-accent2-700: #56633f;
-  --color-accent2-800: #3d472b;
-  --color-accent2-900: #272e1b;
+  /* Secondary accent — a teal scale anchored on the brand's own "info" hue,
+     kept distinct from the primary floresta green so things like Monogram's
+     hash-based category colors and the streak banner still read as visually
+     different from the primary accent instead of collapsing into it. */
+  --color-accent2-100: #e1eef0;
+  --color-accent2-200: #c3dce0;
+  --color-accent2-300: #9bc4cb;
+  --color-accent2-400: #6fa3ac;
+  --color-accent2-500: #4a8089;
+  --color-accent2-600: #2f6b7a;
+  --color-accent2-700: #24525d;
+  --color-accent2-800: #1a3b43;
+  --color-accent2-900: #10262b;
 
-  --color-neutral-100: #f9f4ed;
-  --color-neutral-200: #eee7db;
-  --color-neutral-300: #dcd3c4;
-  --color-neutral-400: #c0b6a5;
-  --color-neutral-500: #a19786;
-  --color-neutral-600: #82796a;
-  --color-neutral-700: #645c50;
-  --color-neutral-800: #474238;
-  --color-neutral-900: #2e2b25;
+  --color-neutral-100: #f5f8f4;
+  --color-neutral-200: #e9eee8;
+  --color-neutral-300: #dce5dd;
+  --color-neutral-400: #cfe0d3;
+  --color-neutral-500: #a5c8b1;
+  --color-neutral-600: #566459;
+  --color-neutral-700: #3b4a40;
+  --color-neutral-800: #1b241e;
+  --color-neutral-900: #0f2a1c;
 
-  --color-positive: var(--color-accent2-700);
-  --color-positive-bg: var(--color-accent2-100);
-  --color-negative: #a8402c;
-  --color-negative-bg: #fbe6e0;
-  --color-warning: #9c6a13;
-  --color-warning-bg: #fbedd2;
+  --color-positive: #3f7f5a;
+  --color-positive-bg: #e3efe6;
+  --color-negative: #b8513a;
+  --color-negative-bg: #f7e6e1;
+  --color-warning: #c98a1e;
+  --color-warning-bg: #f8eeda;
+  --color-info: #2f6b7a;
+  --color-info-bg: #e1eef0;
 
-  /* Accent used for plain text/links/icons (not solid button backgrounds) —
-     needs a lighter step in dark mode to stay legible on dark surfaces. */
+  /* Accent used for plain text/links/icons (not solid button backgrounds). */
   --color-accent-ink: var(--color-accent-700);
 
   /* Categorical chart palette (identity, not brand) — fixed hue order,
@@ -60,32 +66,38 @@
   --chart-series-6: #008300;
   --chart-other: var(--color-neutral-500);
 
-  --radius-sm: 8px;
-  --radius-md: 16px;
+  --radius-sm: 12px;
+  --radius-md: 20px;
   --radius-lg: 28px;
-  --radius-card: 32px;
+  --radius-card: 24px;
 
-  --shadow-sm: 0 1px 2px rgb(46 43 37 / 14%);
-  --shadow-md: 0 3px 10px rgb(46 43 37 / 16%);
-  --shadow-lg: 0 12px 32px rgb(46 43 37 / 22%);
+  --shadow-sm: 0 2px 8px rgb(23 61 42 / 6%);
+  --shadow-md: 0 10px 30px rgb(23 61 42 / 12%);
+  --shadow-lg: 0 20px 50px rgb(23 61 42 / 20%);
 }
 
 /* System-driven dark mode — skipped whenever the person picked an explicit
-   theme in Configurações (data-theme="light" or "dark" below wins instead). */
+   theme in Configurações (data-theme="light" or "dark" below wins instead).
+   The brand kit itself is a single fixed light palette; these dark values
+   are this app's own derivation of it (deeper floresta surfaces, lightened
+   accent/functional steps) so the existing tema claro/escuro preference
+   keeps working against the new identity. */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme]) {
-    --color-app: #2e2b25;
-    --color-surface: #474238;
-    --color-surface-2: #3a352c;
-    --color-ink: #f9f4ed;
-    --color-ink-muted: rgb(249 244 237 / 60%);
-    --color-divider: rgb(255 255 255 / 16%);
+    --color-app: #0f2a1c;
+    --color-surface: #173d2a;
+    --color-surface-2: #1f4f36;
+    --color-ink: #f5f8f4;
+    --color-ink-muted: rgb(245 248 244 / 65%);
+    --color-divider: rgb(255 255 255 / 14%);
 
-    --color-positive: var(--color-accent2-400);
+    --color-positive: #6fa383;
     --color-negative: #e2836b;
     --color-negative-bg: rgb(226 131 107 / 20%);
     --color-warning: #e0b25a;
     --color-warning-bg: rgb(224 178 90 / 20%);
+    --color-info: #6fb3c4;
+    --color-info-bg: rgb(111 179 196 / 20%);
     --color-accent-ink: var(--color-accent-400);
 
     --chart-series-1: #3987e5;
@@ -103,18 +115,20 @@
 
 /* Explicit "Escuro" choice — applies regardless of system preference. */
 :root[data-theme="dark"] {
-  --color-app: #2e2b25;
-  --color-surface: #474238;
-  --color-surface-2: #3a352c;
-  --color-ink: #f9f4ed;
-  --color-ink-muted: rgb(249 244 237 / 60%);
-  --color-divider: rgb(255 255 255 / 16%);
+  --color-app: #0f2a1c;
+  --color-surface: #173d2a;
+  --color-surface-2: #1f4f36;
+  --color-ink: #f5f8f4;
+  --color-ink-muted: rgb(245 248 244 / 65%);
+  --color-divider: rgb(255 255 255 / 14%);
 
-  --color-positive: var(--color-accent2-400);
+  --color-positive: #6fa383;
   --color-negative: #e2836b;
   --color-negative-bg: rgb(226 131 107 / 20%);
   --color-warning: #e0b25a;
   --color-warning-bg: rgb(224 178 90 / 20%);
+  --color-info: #6fb3c4;
+  --color-info-bg: rgb(111 179 196 / 20%);
   --color-accent-ink: var(--color-accent-400);
 
   --chart-series-1: #3987e5;
@@ -130,7 +144,7 @@
 }
 
 @theme inline {
-  --font-heading: var(--font-caprasimo);
+  --font-heading: var(--font-figtree);
   --font-body: var(--font-figtree);
 
   --color-app: var(--color-app);
@@ -176,6 +190,8 @@
   --color-negative-bg: var(--color-negative-bg);
   --color-warning: var(--color-warning);
   --color-warning-bg: var(--color-warning-bg);
+  --color-info: var(--color-info);
+  --color-info-bg: var(--color-info-bg);
   --color-accent-ink: var(--color-accent-ink);
 
   --radius-sm: var(--radius-sm);
@@ -188,83 +204,48 @@
   --shadow-lg: var(--shadow-lg);
 }
 
-/* Accent color presets — override the accent-100..900 scale only, since
-   every other token (accent-ink, dark-mode /40 backgrounds, etc.) already
-   references these variables and cascades through automatically. */
-:root[data-accent="azul"] {
-  --color-accent-100: #e6eef5;
-  --color-accent-200: #c3d8e8;
-  --color-accent-300: #96bcd6;
-  --color-accent-400: #6a9dc0;
-  --color-accent-500: #4a80a8;
-  --color-accent-600: #386389;
-  --color-accent-700: #2c4d6c;
-  --color-accent-800: #203a51;
-  --color-accent-900: #142534;
-}
-
-:root[data-accent="roxo"] {
-  --color-accent-100: #f0e6f2;
-  --color-accent-200: #ddc4e2;
-  --color-accent-300: #c39bcd;
-  --color-accent-400: #a473b3;
-  --color-accent-500: #875798;
-  --color-accent-600: #6b4279;
-  --color-accent-700: #52335f;
-  --color-accent-800: #3c2547;
-  --color-accent-900: #27182f;
-}
-
-:root[data-accent="terracota"] {
-  --color-accent-100: #f6e9e0;
-  --color-accent-200: #ecc9b3;
-  --color-accent-300: #dea27d;
-  --color-accent-400: #cc7c52;
-  --color-accent-500: #b65f37;
-  --color-accent-600: #954a2a;
-  --color-accent-700: #723a21;
-  --color-accent-800: #532a18;
-  --color-accent-900: #351b0f;
-}
-
-:root[data-accent="grafite"] {
-  --color-accent-100: #e9eaec;
-  --color-accent-200: #c9ccd1;
-  --color-accent-300: #a3a8b0;
-  --color-accent-400: #7c828d;
-  --color-accent-500: #61686f;
-  --color-accent-600: #4b515a;
-  --color-accent-700: #3a3f46;
-  --color-accent-800: #2b2f34;
-  --color-accent-900: #1c1e22;
-}
-
-/* Heading style — "neutro" swaps the display font for the body font,
-   reusing the already-loaded family instead of downloading a new one. */
-:root[data-heading="neutro"] {
-  --font-heading: var(--font-body);
-}
-
 html {
   color-scheme: light dark;
 }
 
 body {
-  background: var(--color-app);
+  background: var(--color-app) url("/brand/fundos/padrao-pontos-claro.svg") repeat;
   color: var(--color-ink);
   font-family: var(--font-body), system-ui, sans-serif;
-  font-size: 15px;
+  font-size: 16px;
   line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+:root[data-theme="dark"] body {
+  background-image: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) body {
+    background-image: none;
+  }
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-heading), serif;
-  font-weight: 400;
+  font-family: var(--font-heading), system-ui, sans-serif;
 }
 
-h1 { font-size: 42px; line-height: 1.1; }
-h2 { font-size: 32px; line-height: 1.15; }
-h3 { font-size: 25px; line-height: 1.2; }
-h4 { font-size: 20px; line-height: 1.25; }
-h5 { font-size: 16px; line-height: 1.3; }
-h6 { font-size: 13px; line-height: 1.3; text-transform: uppercase; letter-spacing: 0.08em; }
+/* Título / Subtítulo / corpo scale from the ECG Bank identity. */
+h1 { font-size: 32px; line-height: 1.15; font-weight: 700; letter-spacing: -0.02em; }
+h2 { font-size: 28px; line-height: 1.2; font-weight: 700; letter-spacing: -0.02em; }
+h3 { font-size: 22px; line-height: 1.25; font-weight: 600; }
+h4 { font-size: 20px; line-height: 1.3; font-weight: 600; }
+h5 { font-size: 16px; line-height: 1.3; font-weight: 600; }
+h6 { font-size: 12px; line-height: 1.2; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; }
+
+/* Hero display size — used explicitly (welcome/onboarding), not a heading tag default. */
+.ecg-display { font-size: 64px; line-height: 1; font-weight: 800; letter-spacing: -0.035em; }
+
+/* KPI figure — the big highlighted number on balance/summary cards. */
+.ecg-kpi { font-size: 32px; line-height: 1.1; font-weight: 800; letter-spacing: -0.02em; }
+
+:focus-visible {
+  outline: 2px solid var(--color-accent-500);
+  outline-offset: 2px;
+}

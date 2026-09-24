@@ -109,7 +109,7 @@ export function EditTransactionForm({
         className="mt-4"
       >
         <input type="hidden" name="id" value={transaction.id} />
-        <Button type="submit" variant="secondary" className="w-full text-negative">
+        <Button type="submit" variant="danger" className="w-full">
           Excluir lançamento
         </Button>
       </ConfirmForm>

@@ -45,8 +45,8 @@ export function CategorySpendChart({ groups }: { groups: CategorySpend[] }) {
           <div key={seg.key} className="flex items-center gap-2 text-[13px]">
             <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ backgroundColor: seg.color }} aria-hidden />
             <span className="min-w-0 flex-1 truncate text-ink">{seg.name}</span>
-            <span className="shrink-0 text-ink-muted">{Math.round((seg.cents / total) * 100)}%</span>
-            <span className="shrink-0 font-semibold text-ink">{formatCents(seg.cents)}</span>
+            <span className="shrink-0 tabular-nums text-ink-muted">{Math.round((seg.cents / total) * 100)}%</span>
+            <span className="shrink-0 font-semibold tabular-nums text-ink">{formatCents(seg.cents)}</span>
           </div>
         ))}
       </div>

@@ -52,7 +52,7 @@ export function EditDebtForm({
 
       <ConfirmForm action={deleteDebt} confirmMessage={`Excluir a dívida "${debt.name}"?`} className="mt-4">
         <input type="hidden" name="debt_id" value={debt.id} />
-        <Button type="submit" variant="secondary" className="w-full text-negative">
+        <Button type="submit" variant="danger" className="w-full">
           Excluir dívida
         </Button>
       </ConfirmForm>

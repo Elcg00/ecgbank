@@ -17,7 +17,7 @@ export default async function MetasPage() {
       <PlanTabs active="/metas" />
       <div className="mb-4 flex justify-end">
         <Link href="/metas/nova" className="inline-flex items-center gap-1 text-[14px] font-semibold text-accent-ink">
-          <Plus size={16} strokeWidth={2.75} /> Nova meta
+          <Plus size={16} strokeWidth={2.25} /> Nova meta
         </Link>
       </div>
       <div className="flex flex-col gap-3 md:grid md:grid-cols-3 md:gap-4">

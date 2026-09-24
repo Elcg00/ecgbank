@@ -68,7 +68,7 @@ export function EditPurchaseForm({
       <ConfirmForm action={deletePurchase} confirmMessage={`Excluir "${purchase.name}"?`} className="mt-4">
         <input type="hidden" name="purchase_id" value={purchase.id} />
         <input type="hidden" name="card_id" value={cardId} />
-        <Button type="submit" variant="secondary" className="w-full text-negative">
+        <Button type="submit" variant="danger" className="w-full">
           Excluir compra
         </Button>
       </ConfirmForm>

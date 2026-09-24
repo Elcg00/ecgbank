@@ -61,7 +61,7 @@ export default async function BudgetGroupPage({ params }: { params: Promise<{ id
           href={`/orcamento/${group.id}/editar`}
           className="inline-flex items-center gap-1.5 rounded-full border border-divider px-4 py-2 text-[14px] font-semibold text-ink hover:bg-surface-2"
         >
-          <Pencil size={15} strokeWidth={2.75} /> Editar
+          <Pencil size={15} strokeWidth={2.25} /> Editar
         </Link>
       </div>
 
@@ -69,11 +69,11 @@ export default async function BudgetGroupPage({ params }: { params: Promise<{ id
         <div className="mb-3 flex items-end justify-between gap-3">
           <div>
             <p className="text-[13px] text-ink-muted">Gasto este mês</p>
-            <h2>{formatCents(group.spentCents)}</h2>
+            <h2 className="tabular-nums">{formatCents(group.spentCents)}</h2>
           </div>
           {group.limitCents > 0 && (
             <div className="text-right">
-              <p className={`text-[22px] font-heading ${STATUS_TEXT_COLOR[group.status]}`}>{group.pct}%</p>
+              <p className={`text-[22px] font-bold tabular-nums ${STATUS_TEXT_COLOR[group.status]}`}>{group.pct}%</p>
               <p className={`text-[13px] font-semibold ${STATUS_TEXT_COLOR[group.status]}`}>
                 {groupStatusLabel(group.status, group.pct, group.kind)}
               </p>
@@ -86,7 +86,7 @@ export default async function BudgetGroupPage({ params }: { params: Promise<{ id
           className="h-3"
         />
         {group.limitCents > 0 && (
-          <div className="mt-3 flex items-center justify-between text-[13px] text-ink-muted">
+          <div className="mt-3 flex items-center justify-between text-[13px] tabular-nums text-ink-muted">
             <span>Limite de {formatCents(group.limitCents)}</span>
             <span className={remainingCents < 0 ? "font-semibold text-negative" : ""}>
               {remainingCents >= 0
@@ -113,7 +113,7 @@ export default async function BudgetGroupPage({ params }: { params: Promise<{ id
                   {member && <span className="text-ink-muted"> · {member}</span>}
                 </p>
                 <div className="flex shrink-0 flex-col items-end">
-                  <span className="font-semibold text-negative">-{formatCents(t.amount_cents)}</span>
+                  <span className="font-semibold tabular-nums text-negative">-{formatCents(t.amount_cents)}</span>
                   <span className="text-[12px] text-ink-muted">{formatDate(t.occurred_at)}</span>
                 </div>
               </Link>

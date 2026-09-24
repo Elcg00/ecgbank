@@ -83,7 +83,7 @@ export function LancarForm({ categories, members }: { categories: Category[]; me
         </button>
       </div>
 
-      <p className="text-center font-heading text-4xl text-ink">{formatCentsDisplay(cents)}</p>
+      <p className="text-center font-heading text-4xl tabular-nums text-ink">{formatCentsDisplay(cents)}</p>
 
       <div className="grid grid-cols-3 gap-2.5">
         {KEYPAD.map((key, i) =>

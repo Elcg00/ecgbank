@@ -54,7 +54,7 @@ export default async function DividasPage() {
 
       <div className="mb-4 flex justify-end">
         <Link href="/dividas/nova" className="inline-flex items-center gap-1 text-[14px] font-semibold text-accent-ink">
-          <Plus size={16} strokeWidth={2.75} /> Nova dívida
+          <Plus size={16} strokeWidth={2.25} /> Nova dívida
         </Link>
       </div>
 
@@ -63,7 +63,7 @@ export default async function DividasPage() {
           <Card key={d.id} className="flex flex-col gap-3">
             <Link href={`/dividas/${d.id}`}>
               <h4>{d.name}</h4>
-              <p className="text-[13px] text-ink-muted">
+              <p className="text-[13px] tabular-nums text-ink-muted">
                 {formatCents(d.remainingCents)} restante · {d.interestRateMonthly}% a.m. · {d.installmentCount}x{" "}
                 {formatCents(d.installmentAmountCents)}
               </p>

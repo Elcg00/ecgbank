@@ -21,7 +21,7 @@ export default async function LancarPage() {
         <div className="mb-5 flex items-center justify-between">
           <h3>Nova movimentação</h3>
           <Link href="/" aria-label="Fechar" className="text-ink-muted">
-            <X size={22} strokeWidth={2.75} />
+            <X size={22} strokeWidth={2.25} />
           </Link>
         </div>
         <LancarForm

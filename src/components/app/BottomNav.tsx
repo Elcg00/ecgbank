@@ -14,7 +14,7 @@ export function BottomNav({ overdueBillsCount }: { overdueBillsCount?: number })
               aria-label="Lançar movimentação"
               className="-mt-6 flex h-14 w-14 items-center justify-center rounded-full bg-accent-700 text-white shadow-lg"
             >
-              <Plus size={26} strokeWidth={2.75} />
+              <Plus size={26} strokeWidth={2.25} />
             </Link>
           </div>
         ) : (
@@ -22,7 +22,7 @@ export function BottomNav({ overdueBillsCount }: { overdueBillsCount?: number })
             key={item.href}
             href={item.href}
             label={item.label}
-            icon={<item.icon size={22} strokeWidth={2.75} />}
+            icon={<item.icon size={22} strokeWidth={2.25} />}
             variant="bottom"
             badge={item.href === "/mais" ? overdueBillsCount : undefined}
           />

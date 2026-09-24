@@ -55,11 +55,7 @@ export default async function ConfiguracoesPage() {
 
         <Card>
           <h5 className="mb-3">Aparência</h5>
-          <PreferencesForm
-            defaultTheme={prefs.theme_preference}
-            defaultAccent={prefs.accent_theme}
-            defaultHeading={prefs.heading_style}
-          />
+          <PreferencesForm defaultTheme={prefs.theme_preference} />
         </Card>
 
         <Card>
@@ -89,7 +85,7 @@ export default async function ConfiguracoesPage() {
             action={deactivateAccount}
             confirmMessage="Desativar sua conta? Você não conseguirá mais entrar até um administrador da família reativar seu acesso."
           >
-            <Button type="submit" variant="secondary" className="w-full text-negative">
+            <Button type="submit" variant="danger" className="w-full">
               Desativar minha conta
             </Button>
           </ConfirmForm>

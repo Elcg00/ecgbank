@@ -45,7 +45,7 @@ export function EditGoalForm({
 
       <ConfirmForm action={deleteGoal} confirmMessage={`Excluir a meta "${goal.name}"?`} className="mt-4">
         <input type="hidden" name="goal_id" value={goal.id} />
-        <Button type="submit" variant="secondary" className="w-full text-negative">
+        <Button type="submit" variant="danger" className="w-full">
           Excluir meta
         </Button>
       </ConfirmForm>

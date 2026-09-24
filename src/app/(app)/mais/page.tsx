@@ -22,7 +22,7 @@ export default async function MaisPage() {
               i > 0 ? "border-t border-divider" : ""
             }`}
           >
-            <item.icon size={20} strokeWidth={2.75} className="text-accent-ink" />
+            <item.icon size={20} strokeWidth={2.25} className="text-accent-ink" />
             <span className="flex-1 font-semibold">{item.label}</span>
             {item.href === "/contas" && (
               <CountBadge count={overdueBillsCount} className="h-5 min-w-5 px-1.5 text-[11px]" />

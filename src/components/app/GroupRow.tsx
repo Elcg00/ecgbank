@@ -37,7 +37,7 @@ export function GroupRow({ group, withPill = true }: { group: BudgetGroupSummary
               </span>
             )}
           </div>
-          <p className="truncate text-[13px] text-ink-muted">
+          <p className="truncate text-[13px] tabular-nums text-ink-muted">
             {formatCents(group.spentCents)}
             {group.limitCents > 0 && ` / ${formatCents(group.limitCents)}`}
           </p>

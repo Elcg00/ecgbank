@@ -28,7 +28,7 @@ export default async function ContasPage() {
       <PageHeader title="Contas a pagar" name={profile.full_name} avatarColor={profile.avatar_color} />
       <div className="mb-4 flex justify-end">
         <Link href="/contas/nova" className="inline-flex items-center gap-1 text-[14px] font-semibold text-accent-ink">
-          <Plus size={16} strokeWidth={2.75} /> Nova conta
+          <Plus size={16} strokeWidth={2.25} /> Nova conta
         </Link>
       </div>
       <div className="flex flex-col gap-3 md:grid md:grid-cols-2 md:gap-4">
@@ -42,7 +42,7 @@ export default async function ContasPage() {
                   <p className="flex items-center gap-1.5 truncate font-semibold text-ink">
                     {bill.name}
                     {bill.recurring && (
-                      <Repeat size={13} strokeWidth={2.75} className="shrink-0 text-ink-muted" aria-label="Recorrente" />
+                      <Repeat size={13} strokeWidth={2.25} className="shrink-0 text-ink-muted" aria-label="Recorrente" />
                     )}
                   </p>
                   <p className="truncate text-[13px] text-ink-muted">
@@ -56,7 +56,7 @@ export default async function ContasPage() {
                 <ChevronRight size={16} className="shrink-0 text-ink-muted" />
               </Link>
               <div className="flex shrink-0 flex-col items-end gap-1.5">
-                <span className="font-semibold text-ink">{formatCents(bill.amount_cents)}</span>
+                <span className="font-semibold tabular-nums text-ink">{formatCents(bill.amount_cents)}</span>
                 {bill.paid ? (
                   <ConfirmForm
                     action={markBillPaid}
@@ -68,7 +68,7 @@ export default async function ContasPage() {
                       type="submit"
                       className="inline-flex items-center gap-1.5 rounded-full bg-positive-bg px-3 py-1.5 text-[13px] font-semibold text-positive"
                     >
-                      <CheckCircle2 size={15} strokeWidth={2.75} /> Paga
+                      <CheckCircle2 size={15} strokeWidth={2.25} /> Paga
                     </button>
                   </ConfirmForm>
                 ) : (
@@ -79,7 +79,7 @@ export default async function ContasPage() {
                       type="submit"
                       className="inline-flex items-center gap-1.5 rounded-full border border-accent-700 px-3 py-1.5 text-[13px] font-semibold text-accent-ink hover:bg-accent-100 dark:hover:bg-accent-900/40"
                     >
-                      <Circle size={15} strokeWidth={2.75} /> Marcar como paga
+                      <Circle size={15} strokeWidth={2.25} /> Marcar como paga
                     </button>
                   </form>
                 )}

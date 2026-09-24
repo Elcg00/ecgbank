@@ -36,7 +36,7 @@ export function EditGroupForm({
         className="mt-4"
       >
         <input type="hidden" name="group_id" value={groupId} />
-        <Button type="submit" variant="secondary" className="w-full text-negative">
+        <Button type="submit" variant="danger" className="w-full">
           Excluir grupo
         </Button>
       </ConfirmForm>

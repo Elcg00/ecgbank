@@ -98,17 +98,25 @@ export default async function DashboardPage() {
 
       {/* Mobile layout */}
       <div className="flex flex-col gap-4 md:hidden">
-        <Card>
-          <p className="text-[13px] text-ink-muted">Saldo do mês</p>
-          <h2 className="mb-1">{formatCents(saldoCents)}</h2>
-          <p className="flex items-center gap-3 text-[13px]">
-            <span className="flex items-center gap-1 text-positive">
-              <ArrowUp size={14} strokeWidth={2.75} /> {formatCents(entradasCents)} entradas
-            </span>
-            <span className="flex items-center gap-1 text-negative">
-              <ArrowDown size={14} strokeWidth={2.75} /> {formatCents(saidasCents)} saídas
-            </span>
-          </p>
+        <Card tint="dark" className="relative overflow-hidden">
+          {/* eslint-disable-next-line @next/next/no-img-element -- static brand SVG, no Image optimization needed */}
+          <img
+            src="/brand/fundos/canto-aneis-escuro.svg"
+            alt=""
+            className="pointer-events-none absolute -bottom-16 -right-16 w-[280px]"
+          />
+          <div className="relative">
+            <p className="text-[13px] text-[#CFE0D3]">Saldo do mês</p>
+            <h2 className="ecg-kpi mb-1 tabular-nums">{formatCents(saldoCents)}</h2>
+            <p className="flex items-center gap-3 text-[13px]">
+              <span className="flex items-center gap-1 tabular-nums">
+                <ArrowUp size={14} strokeWidth={2.25} /> {formatCents(entradasCents)} entradas
+              </span>
+              <span className="flex items-center gap-1 tabular-nums text-[#e2836b]">
+                <ArrowDown size={14} strokeWidth={2.25} /> {formatCents(saidasCents)} saídas
+              </span>
+            </p>
+          </div>
         </Card>
         <StreakBanner streak={streak} />
         {GroupsSection}
@@ -120,17 +128,25 @@ export default async function DashboardPage() {
       {/* Desktop layout */}
       <div className="hidden md:block">
         <div className="mb-6 grid grid-cols-3 gap-4">
-          <Card>
-            <p className="text-[13px] text-ink-muted">Saldo do mês</p>
-            <h2>{formatCents(saldoCents)}</h2>
+          <Card tint="dark" className="relative overflow-hidden">
+            {/* eslint-disable-next-line @next/next/no-img-element -- static brand SVG, no Image optimization needed */}
+            <img
+              src="/brand/fundos/canto-aneis-escuro.svg"
+              alt=""
+              className="pointer-events-none absolute -bottom-16 -right-16 w-[280px]"
+            />
+            <div className="relative">
+              <p className="text-[13px] text-[#CFE0D3]">Saldo do mês</p>
+              <h2 className="ecg-kpi tabular-nums">{formatCents(saldoCents)}</h2>
+            </div>
           </Card>
           <Card>
             <p className="text-[13px] text-ink-muted">Entradas</p>
-            <h2 className="text-positive">{formatCents(entradasCents)}</h2>
+            <h2 className="ecg-kpi tabular-nums text-positive">{formatCents(entradasCents)}</h2>
           </Card>
           <Card>
             <p className="text-[13px] text-ink-muted">Saídas</p>
-            <h2 className="text-negative">{formatCents(saidasCents)}</h2>
+            <h2 className="ecg-kpi tabular-nums text-negative">{formatCents(saidasCents)}</h2>
           </Card>
         </div>
         <div className="grid grid-cols-[1fr_360px] gap-6">

@@ -30,7 +30,7 @@ export function GoalCard({ goal, compact = false }: { goal: GoalSummary; compact
           )}
         </div>
         <ProgressBar pct={pct} color="accent" />
-        <p className="text-[13px] text-ink-muted">
+        <p className="text-[13px] tabular-nums text-ink-muted">
           {formatCents(goal.savedCents)} de {formatCents(goal.target_cents)}
           {goal.monthly_target_cents > 0 && ` · guarde ${formatCents(goal.monthly_target_cents)}/mês`}
         </p>
@@ -39,7 +39,7 @@ export function GoalCard({ goal, compact = false }: { goal: GoalSummary; compact
             {goal.contributions.map((c) => (
               <span
                 key={c.userId}
-                className="rounded-full bg-surface-2 px-3 py-1 text-[12px] font-semibold text-ink-muted"
+                className="rounded-full bg-surface-2 px-3 py-1 text-[12px] font-semibold tabular-nums text-ink-muted"
               >
                 {c.name}: {formatCents(c.amountCents)}
               </span>
