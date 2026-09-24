@@ -15,7 +15,7 @@ export function ProgressBar({
         ? "bg-warning"
         : color === "negative"
           ? "bg-negative"
-          : "bg-accent-700";
+          : "bg-accent-ink";
 
   return (
     <div className={`h-2 w-full overflow-hidden rounded-full bg-surface-2 ${className}`}>

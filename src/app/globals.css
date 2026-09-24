@@ -84,11 +84,19 @@
    keeps working against the new identity. */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme]) {
-    --color-app: #0f2a1c;
-    --color-surface: #173d2a;
-    --color-surface-2: #1f4f36;
-    --color-ink: #f5f8f4;
-    --color-ink-muted: rgb(245 248 244 / 65%);
+    /* Neutral, low-saturation dark scale — deliberately NOT shades of the
+       brand green. accent-700/accent-400 stay saturated in every theme, so
+       they're the only vivid color here; surfaces just need to step apart
+       from each other and from the page in plain lightness. Reusing the
+       brand hue for "surface" made cards, the page background and the
+       accent color (buttons, progress-bar fill) collapse into the same
+       green, to the point a progress bar's fill became invisible against
+       its own card. */
+    --color-app: #0b120f;
+    --color-surface: #1b2521;
+    --color-surface-2: #26332d;
+    --color-ink: #eef2ef;
+    --color-ink-muted: rgb(238 242 239 / 64%);
     --color-divider: rgb(255 255 255 / 14%);
 
     --color-positive: #6fa383;
@@ -115,11 +123,11 @@
 
 /* Explicit "Escuro" choice — applies regardless of system preference. */
 :root[data-theme="dark"] {
-  --color-app: #0f2a1c;
-  --color-surface: #173d2a;
-  --color-surface-2: #1f4f36;
-  --color-ink: #f5f8f4;
-  --color-ink-muted: rgb(245 248 244 / 65%);
+  --color-app: #0b120f;
+  --color-surface: #1b2521;
+  --color-surface-2: #26332d;
+  --color-ink: #eef2ef;
+  --color-ink-muted: rgb(238 242 239 / 64%);
   --color-divider: rgb(255 255 255 / 14%);
 
   --color-positive: #6fa383;
