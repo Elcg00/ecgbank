@@ -22,25 +22,12 @@ export async function ensureFamily(
   if (profile.family_id) return profile.family_id;
 
   if (email) {
-    const { data: invite } = await supabase
-      .from("family_invites")
-      .select("id, family_id")
-      .eq("status", "pending")
-      .ilike("email", email)
-      .limit(1)
-      .maybeSingle();
-
-    if (invite) {
-      await supabase
-        .from("profiles")
-        .update({ family_id: invite.family_id, role: "member" })
-        .eq("id", profile.id);
-      await supabase
-        .from("family_invites")
-        .update({ status: "accepted" })
-        .eq("id", invite.id);
-      return invite.family_id as string;
-    }
+    // Runs as a SECURITY DEFINER function (not a plain table update) so it
+    // can only ever assign a family_id backed by a real pending invite
+    // addressed to the caller's own authenticated e-mail — see the function
+    // definition for why a direct client update can't be allowed here.
+    const { data: joinedFamilyId } = await supabase.rpc("accept_pending_invite");
+    if (joinedFamilyId) return joinedFamilyId as string;
   }
 
   // Runs as a single SECURITY DEFINER transaction (creates the family and

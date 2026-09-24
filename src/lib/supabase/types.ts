@@ -581,6 +581,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      accept_pending_invite: { Args: never; Returns: string }
       current_family_id: { Args: never; Returns: string }
       deactivate_family_member: {
         Args: { p_deactivated: boolean; p_member_id: string }
@@ -607,7 +608,7 @@ export type Database = {
 
 type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
 
-type DefaultSchema = DatabaseWithoutInternals["public"]
+type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
 
 export type Tables<
   DefaultSchemaTableNameOrOptions extends
