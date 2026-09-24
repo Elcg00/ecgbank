@@ -49,7 +49,7 @@ export async function signUp(_prev: { error?: string } | undefined, formData: Fo
   }
 
   const supabase = await createClient();
-  const { error } = await supabase.auth.signUp({
+  const { data, error } = await supabase.auth.signUp({
     email,
     password,
     options: {
@@ -63,6 +63,14 @@ export async function signUp(_prev: { error?: string } | undefined, formData: Fo
       return { error: "Esse e-mail já tem cadastro. Tente entrar." };
     }
     return { error: "Não foi possível criar sua conta. Tente novamente." };
+  }
+
+  // With e-mail confirmation turned off in Supabase, signUp already returns
+  // a live session — sending this person to "verifique seu e-mail" would stall
+  // them waiting on a confirmation link that's never coming. Only show that
+  // page when confirmation is actually pending (no session yet).
+  if (data.session) {
+    redirect("/");
   }
 
   redirect("/cadastro/verifique-email");
