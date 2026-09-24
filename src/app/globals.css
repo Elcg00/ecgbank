@@ -92,11 +92,11 @@
        accent color (buttons, progress-bar fill) collapse into the same
        green, to the point a progress bar's fill became invisible against
        its own card. */
-    --color-app: #0b120f;
-    --color-surface: #1b2521;
-    --color-surface-2: #26332d;
+    --color-app: #101a15;
+    --color-surface: #1f2c25;
+    --color-surface-2: #2b3c32;
     --color-ink: #eef2ef;
-    --color-ink-muted: rgb(238 242 239 / 64%);
+    --color-ink-muted: rgb(238 242 239 / 66%);
     --color-divider: rgb(255 255 255 / 14%);
 
     --color-positive: #6fa383;
@@ -123,11 +123,11 @@
 
 /* Explicit "Escuro" choice — applies regardless of system preference. */
 :root[data-theme="dark"] {
-  --color-app: #0b120f;
-  --color-surface: #1b2521;
-  --color-surface-2: #26332d;
+  --color-app: #101a15;
+  --color-surface: #1f2c25;
+  --color-surface-2: #2b3c32;
   --color-ink: #eef2ef;
-  --color-ink-muted: rgb(238 242 239 / 64%);
+  --color-ink-muted: rgb(238 242 239 / 66%);
   --color-divider: rgb(255 255 255 / 14%);
 
   --color-positive: #6fa383;
@@ -226,12 +226,12 @@ body {
 }
 
 :root[data-theme="dark"] body {
-  background-image: none;
+  background-image: url("/brand/fundos/padrao-pontos-escuro.svg");
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme]) body {
-    background-image: none;
+    background-image: url("/brand/fundos/padrao-pontos-escuro.svg");
   }
 }
 
